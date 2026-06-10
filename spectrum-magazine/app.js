@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════
-//  SPECTRUM — app.js
+//  IMPULSE — app.js
 //  Flipbook engine + mouse-parallax cover card
 // ═══════════════════════════════════════════
 
@@ -44,7 +44,7 @@ const flipbookStage  = document.getElementById('flipbookStage');
   try {
     const res = await fetch('ME-MAGAZINE.pdf', { method: 'HEAD' });
     if (res.ok) {
-      uploadZone.querySelector('h3').textContent = 'Loading SPECTRUM…';
+      uploadZone.querySelector('h3').textContent = 'Loading IMPULSE…';
       const pdfRes  = await fetch('ME-MAGAZINE.pdf');
       const buffer  = await pdfRes.arrayBuffer();
       await loadPDFFromBuffer(buffer);
