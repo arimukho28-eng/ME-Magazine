@@ -233,3 +233,41 @@ window.addEventListener('scroll', () => {
   document.getElementById('navbar').style.borderBottomColor =
     window.scrollY > 20 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)';
 });
+
+// ─── FACULTY MODAL INTERACTION LOGIC ───
+const facultyData = {
+  td: {
+    name: "Dr. Tridibesh Das",
+    role: "Head of Department",
+    img: "td-sir.jpg",
+    quote: '"Engineering is about cultivating an adaptive mindset to solve complex constraints. This publication highlights the commendable tenacity of our students, balancing dense experimental research with expressive creativity."'
+  },
+  sd: {
+    name: "Dr. Santanu Das",
+    role: "Professor & Registrar",
+    img: "sd-sir.jpg",
+    quote: '"This publication legacy remains a testament to our excellence and the deep practical evolution of our engineering students across generations."'
+  }
+};
+
+function openFacultyModal(key) {
+  const data = facultyData[key];
+  if (!data) return;
+  
+  document.getElementById('modalName').textContent = data.name;
+  document.getElementById('modalRole').textContent = data.role;
+  document.getElementById('modalQuote').textContent = data.quote;
+  
+  const modalImg = document.getElementById('modalImg');
+  modalImg.src = data.img;
+  modalImg.onerror = function() {
+    this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%231a1a35"/><text x="50%" y="55%" font-family="sans-serif" font-size="14" fill="%23c9a84c" text-anchor="middle">Profile Portrait</text></svg>';
+  };
+
+  const modal = document.getElementById('facultyModal');
+  modal.classList.add('open');
+}
+
+function closeFacultyModal() {
+  document.getElementById('facultyModal').classList.remove('open');
+}
