@@ -594,3 +594,25 @@ body {
   transition: opacity 0.2s;
 }
 .cover-card:hover::after { opacity: 1; }
+
+
+.download-magazine-wrap{
+  text-align:center;
+  margin-bottom:20px;
+}
+.download-magazine-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 24px;
+  border-radius:12px;
+  background:#e84040;
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+.download-magazine-btn:hover{
+  transform:translateY(-2px);
+}

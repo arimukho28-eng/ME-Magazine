@@ -173,7 +173,7 @@ async function renderSinglePage(pageNo) {
   if (h > stageHeight) { h = stageHeight; w = h / aspect; }
 
   await drawPage(singleCanvas, pageNo, w, h);
-  singlePageNum.textContent = `Page ${pageNo} of ${totalPages}`;
+  singlePageNum.textContent = `${pageNo} / ${totalPages}`;
 }
 
 async function drawPage(canvas, pageNo, w, h) {
