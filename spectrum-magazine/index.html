@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SPECTRUM — Mechanical Engineering Magazine</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="nav-logo-text">SPECTRUM</span>
+        <span class="nav-logo-sub">ME · KGEC · '26</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#spirit">The Spirit</a></li>
+        <li><a href="#messages">Messages</a></li>
+        <li><a href="#flipbook" class="nav-cta">Read Now</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home">Home</a>
+      <a href="#spirit">The Spirit</a>
+      <a href="#messages">Messages</a>
+      <a href="#flipbook">Read Now</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="home" class="hero">
+    <div class="hero-bg-lines"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Department of Mechanical Engineering · KGEC · 2026</p>
+      <h1 class="hero-title">SPECTRUM</h1>
+      <p class="hero-tagline">NO TECH WITHOUT MECH</p>
+      <p class="hero-desc">More than a magazine — a celebration of the vibrant spirit of the Department of Mechanical Engineering. Achievements, innovations, experiences, creativity, and aspirations, all in one edition.</p>
+      <div class="hero-actions">
+        <a href="#flipbook" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Read the Magazine
+        </a>
+        <a href="#spirit" class="btn-ghost">Explore More</a>
+      </div>
+    </div>
+    <div class="hero-cover-art">
+      <div class="cover-mock">
+        <div class="cover-mock-inner">
+          <p class="cover-mock-dept">DEPT. OF MECHANICAL ENGINEERING</p>
+          <h2>SPECTRUM</h2>
+          <p class="cover-mock-year">'26</p>
+          <div class="cover-mock-gear">⚙</div>
+        </div>
+        <div class="cover-mock-shadow"></div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ─── SPIRIT ─── -->
+  <section id="spirit" class="spirit">
+    <div class="section-container">
+      <div class="section-label">What We Are</div>
+      <h2 class="section-title">The Spirit of <em>Spectrum</em></h2>
+      <div class="spirit-grid">
+        <div class="spirit-card">
+          <div class="spirit-icon">⚙️</div>
+          <h3>Technical Evolution</h3>
+          <p>SPECTRUM serves as a timeline capturing our shift toward modern industrial frontiers — reflecting student contributions in computational design, automation, thermal labs, and advanced automotive builds.</p>
+        </div>
+        <div class="spirit-card">
+          <div class="spirit-icon">🎨</div>
+          <h3>Creative Spectrum</h3>
+          <p>Beyond complex equations and machine blueprints lies a vibrant stream of literature, fine art, photography, and personal reflections that bind the batch together as a family.</p>
+        </div>
+        <div class="spirit-card">
+          <div class="spirit-icon">🏆</div>
+          <h3>Legacy & Achievement</h3>
+          <p>From groundbreaking projects to campus triumphs, SPECTRUM documents the milestones that define our batch — a living record for future generations to look back on.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MESSAGES ─── -->
+  <section id="messages" class="messages">
+    <div class="section-container">
+      <div class="section-label">From the Desk</div>
+      <h2 class="section-title">Faculty Messages</h2>
+      <div class="messages-grid">
+        <div class="message-card">
+          <div class="message-avatar" style="background:#1a1a2e;">
+            <span>TD</span>
+          </div>
+          <div class="message-body">
+            <span class="message-role">Head of Department</span>
+            <h3 class="message-name">Dr. Tridibesh Das</h3>
+            <blockquote>"Engineering is about cultivating an adaptive mindset to solve complex constraints. This publication highlights the commendable tenacity of our students, balancing dense experimental research with expressive creativity."</blockquote>
+          </div>
+        </div>
+        <div class="message-card">
+          <div class="message-avatar" style="background:#0d1b2a;">
+            <span>SD</span>
+          </div>
+          <div class="message-body">
+            <span class="message-role">Professor & Registrar</span>
+            <h3 class="message-name">Dr. Santanu Das</h3>
+            <blockquote>"This publication legacy remains a testament to our excellence and the deep practical evolution of our engineering students across generations."</blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FLIPBOOK ─── -->
+  <section id="flipbook" class="flipbook-section">
+    <div class="section-container">
+      <div class="section-label">Digital Edition</div>
+      <h2 class="section-title">Read the Magazine</h2>
+      <p class="flipbook-subtitle">Natively rendered · Zero ads · No watermark</p>
+
+      <div class="flipbook-upload-zone" id="uploadZone">
+        <div class="upload-icon">📄</div>
+        <h3>Upload Your Magazine PDF</h3>
+        <p>Drag &amp; drop the PDF here, or click to browse</p>
+        <input type="file" id="pdfInput" accept=".pdf" hidden />
+        <button class="btn-primary" onclick="document.getElementById('pdfInput').click()">Choose PDF</button>
+        <p class="upload-note">The PDF stays in your browser — nothing is uploaded to any server.</p>
+      </div>
+
+      <!-- Flipbook viewer (shown after upload) -->
+      <div class="flipbook-viewer" id="flipbookViewer" style="display:none;">
+        <div class="flipbook-toolbar">
+          <div class="toolbar-left">
+            <button class="tool-btn" id="prevBtn" title="Previous Page">&#8592; Prev</button>
+            <span class="page-indicator"><span id="currentPage">1</span> / <span id="totalPages">?</span></span>
+            <button class="tool-btn" id="nextBtn" title="Next Page">Next &#8594;</button>
+          </div>
+          <div class="toolbar-right">
+            <button class="tool-btn" id="zoomOut" title="Zoom Out">－</button>
+            <button class="tool-btn" id="zoomIn" title="Zoom In">＋</button>
+            <button class="tool-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+          </div>
+        </div>
+
+        <div class="flipbook-stage" id="flipbookStage">
+          <div class="book-container" id="bookContainer">
+            <div class="book-spread">
+              <div class="page-wrapper left-page" id="leftPageWrapper">
+                <canvas id="leftCanvas"></canvas>
+                <div class="page-number left-num" id="leftPageNum"></div>
+              </div>
+              <div class="book-spine"></div>
+              <div class="page-wrapper right-page" id="rightPageWrapper">
+                <canvas id="rightCanvas"></canvas>
+                <div class="page-number right-num" id="rightPageNum"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Single page for mobile -->
+          <div class="single-page-view" id="singlePageView" style="display:none;">
+            <canvas id="singleCanvas"></canvas>
+            <div class="page-number" id="singlePageNum"></div>
+          </div>
+        </div>
+
+        <div class="flipbook-thumbnails" id="thumbnailStrip"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-title">SPECTRUM</span>
+        <span class="footer-sub">Department of Mechanical Engineering</span>
+        <span class="footer-sub">Kalyani Government Engineering College</span>
+      </div>
+      <div class="footer-copy">
+        © 2026 Department of Mechanical Engineering, KGEC. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- PDF.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
