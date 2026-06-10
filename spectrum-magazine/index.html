@@ -21,7 +21,8 @@
       <ul class="nav-links">
         <li><a href="#home">Home</a></li>
         <li><a href="#spirit">The Spirit</a></li>
-        <li><a href="#messages">Faculty Messages</a></li>
+        <li><a href="#messages">Messages</a></li>
+        <li><a href="javascript:void(0)" onclick="openFacultyTab()" class="nav-special-link">Faculty Directory</a></li>
         <li><a href="#flipbook" class="nav-cta">Read Now</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -31,7 +32,8 @@
     <div class="mobile-menu" id="mobileMenu">
       <a href="#home">Home</a>
       <a href="#spirit">The Spirit</a>
-      <a href="#messages">Faculty Messages</a>
+      <a href="#messages">Messages</a>
+      <a href="javascript:void(0)" onclick="openFacultyTab()">Faculty Directory</a>
       <a href="#flipbook">Read Now</a>
     </div>
   </nav>
@@ -96,9 +98,9 @@
     <div class="section-container">
       <div class="section-label">From the Desk</div>
       <h2 class="section-title">Faculty Messages</h2>
-      <div class="messages-grid">
+      <div class="messages-grid-main">
         
-        <div class="message-card card-interactive" onclick="openFacultyModal('td')">
+        <div class="message-card">
           <div class="message-avatar-container">
             <img src="td-sir.jpg" alt="Dr. Tridibesh Das" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <div class="message-avatar" style="background:#1a1a2e; display:none;"><span>TD</span></div>
@@ -107,11 +109,10 @@
             <span class="message-role">Head of Department</span>
             <h3 class="message-name">Dr. Tridibesh Das</h3>
             <blockquote>"Engineering is about cultivating an adaptive mindset to solve complex constraints. This publication highlights the commendable tenacity of our students, balancing dense experimental research with expressive creativity."</blockquote>
-            <span class="view-popup-hint">Click to view profile</span>
           </div>
         </div>
 
-        <div class="message-card card-interactive" onclick="openFacultyModal('sd')">
+        <div class="message-card">
           <div class="message-avatar-container">
             <img src="sd-sir.jpg" alt="Dr. Santanu Das" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <div class="message-avatar" style="background:#0d1b2a; display:none;"><span>SD</span></div>
@@ -120,103 +121,6 @@
             <span class="message-role">Professor & Registrar</span>
             <h3 class="message-name">Dr. Santanu Das</h3>
             <blockquote>"This publication legacy remains a testament to our excellence and the deep practical evolution of our engineering students across generations."</blockquote>
-            <span class="view-popup-hint">Click to view profile</span>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="debojyoti-mitra.jpg" alt="Dr. Debojyoti Mitra" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#2e1a24; display:none;"><span>DM</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Professor & Former HOD</span>
-            <h3 class="message-name">Dr. Debojyoti Mitra</h3>
-            <blockquote>"Watching the progression of our students as they blend standard mechanical foundations with modern computing paradigms is incredibly rewarding. This volume embodies that exact momentum."</blockquote>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="nripen-mondal.jpg" alt="Dr. Nripen Mondal" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#1a2e24; display:none;"><span>NM</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Assistant Professor</span>
-            <h3 class="message-name">Dr. Nripen Mondal</h3>
-            <blockquote>"True learning shines brightest when students take principles out of the lecture halls and turn them into tangible ideas. Best wishes to the entire publishing team."</blockquote>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="arijit-kundu.jpg" alt="Dr. Arijit Kundu" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#2e2a1a; display:none;"><span>AK</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Assistant Professor</span>
-            <h3 class="message-name">Dr. Arijit Kundu</h3>
-            <blockquote>"The synthesis of structural integrity and aesthetic expression in this layout shows that engineering and art are truly two sides of the same coin."</blockquote>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="debasish-biswas.jpg" alt="Dr. Debasish Biswas" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#1a292e; display:none;"><span>DB</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Assistant Professor</span>
-            <h3 class="message-name">Dr. Debasish Biswas</h3>
-            <blockquote>"Excellence isn't a static landmark but a dynamic target. The research reflections inside this issue manifest a standard of continuous evolution."</blockquote>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="sirsendu-mahata.jpg" alt="Dr. Sirsendu Mahata" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#231a2e; display:none;"><span>SM</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Associate Professor</span>
-            <h3 class="message-name">Dr. Sirsendu Mahata</h3>
-            <blockquote>"Computational modeling and numerical precision drive the state-of-the-art today. It is outstanding to watch our mechanical cohorts showcase such highly refined concepts."</blockquote>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="sibsankar-dasmahapatra.jpg" alt="Dr. Sibsankar Dasmahapatra" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#212e1a; display:none;"><span>SD</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Assistant Professor</span>
-            <h3 class="message-name">Dr. Sibsankar Dasmahapatra</h3>
-            <blockquote>"Manufacturing paradigms are changing fast. Documenting our academic milestones provides a vital map for the junior batches charting their courses behind us."</blockquote>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="samir-chakravarti.jpg" alt="Dr. Samir Chakravarti" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#2e1a1a; display:none;"><span>SC</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Assistant Professor</span>
-            <h3 class="message-name">Dr. Samir Chakravarti</h3>
-            <blockquote>"The foundation of thermodynamics and machine kinetics remains timeless. Seeing students apply these bedrock pillars with unique modern perspectives is brilliant."</blockquote>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar-container">
-            <img src="bidhan-biswas.jpg" alt="Mr. Bidhan Chandra Biswas" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="message-avatar" style="background:#1a232e; display:none;"><span>BB</span></div>
-          </div>
-          <div class="message-body">
-            <span class="message-role">Assistant Professor</span>
-            <h3 class="message-name">Mr. Bidhan Chandra Biswas</h3>
-            <blockquote>"A great engineer operates with systematic accuracy and deep focus. This complete volume echoes the structured effort and dedication of our outstanding batch."</blockquote>
           </div>
         </div>
 
@@ -224,20 +128,138 @@
     </div>
   </section>
 
-  <div id="facultyModal" class="faculty-modal" onclick="closeFacultyModal()">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <button class="modal-close" onclick="closeFacultyModal()">&times;</button>
-      <div class="modal-body-layout">
-        <div class="modal-img-frame">
-          <img id="modalImg" src="" alt="Faculty Portrait">
+  <div id="facultyOverlayTab" class="faculty-overlay-tab" onclick="closeFacultyTab()">
+    <div class="overlay-tab-content" onclick="event.stopPropagation()">
+      <button class="overlay-close" onclick="closeFacultyTab()">&times;</button>
+      
+      <div class="overlay-header">
+        <span class="section-label">KGEC Mechanical Department</span>
+        <h2 class="overlay-title">Faculty Directory</h2>
+        <div class="overlay-header-line"></div>
+      </div>
+
+      <div class="overlay-grid-scroller">
+        
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="td-sir.jpg" alt="Dr. Tridibesh Das" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#1a1a2e;"><span>TD</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Head of Department</span>
+            <h3>Dr. Tridibesh Das</h3>
+            <p class="dir-quote">"Engineering is about cultivating an adaptive mindset to solve complex constraints."</p>
+          </div>
         </div>
-        <div class="modal-text-frame">
-          <span id="modalRole" class="message-role"></span>
-          <h2 id="modalName" class="modal-faculty-title"></h2>
-          <div class="modal-divider"></div>
-          <p id="modalQuote" class="modal-quote-text"></p>
-          <p class="modal-affiliation">Department of Mechanical Engineering<br>Kalyani Government Engineering College</p>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="sd-sir.jpg" alt="Dr. Santanu Das" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#0d1b2a;"><span>SD</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Professor & Registrar</span>
+            <h3>Dr. Santanu Das</h3>
+            <p class="dir-quote">"This publication legacy remains a testament to our excellence and the deep practical evolution of our engineering students."</p>
+          </div>
         </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="debojyoti-mitra.jpg" alt="Dr. Debojyoti Mitra" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#2e1a24;"><span>DM</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Professor & Former HOD</span>
+            <h3>Dr. Debojyoti Mitra</h3>
+            <p class="dir-quote">"Watching the progression of our students as they blend standard mechanical foundations with modern computing paradigms is incredibly rewarding."</p>
+          </div>
+        </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="nripen-mondal.jpg" alt="Dr. Nripen Mondal" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#1a2e24;"><span>NM</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Assistant Professor</span>
+            <h3>Dr. Nripen Mondal</h3>
+            <p class="dir-quote">"True learning shines brightest when students take principles out of the lecture halls and turn them into tangible ideas."</p>
+          </div>
+        </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="arijit-kundu.jpg" alt="Dr. Arijit Kundu" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#2e2a1a;"><span>AK</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Assistant Professor</span>
+            <h3>Dr. Arijit Kundu</h3>
+            <p class="dir-quote">"The synthesis of structural integrity and aesthetic expression shows that engineering and art are truly two sides of the same coin."</p>
+          </div>
+        </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="debasish-biswas.jpg" alt="Dr. Debasish Biswas" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#1a292e;"><span>DB</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Assistant Professor</span>
+            <h3>Dr. Debasish Biswas</h3>
+            <p class="dir-quote">"Excellence isn't a static landmark but a dynamic target. The research reflections inside manifest a standard of continuous evolution."</p>
+          </div>
+        </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="sirsendu-mahata.jpg" alt="Dr. Sirsendu Mahata" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#231a2e;"><span>SM</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Associate Professor</span>
+            <h3>Dr. Sirsendu Mahata</h3>
+            <p class="dir-quote">"Computational modeling and numerical precision drive the state-of-the-art today. Outstanding to watch our cohorts showcase refined concepts."</p>
+          </div>
+        </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="sibsankar-dasmahapatra.jpg" alt="Dr. Sibsankar Dasmahapatra" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#212e1a;"><span>SD</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Assistant Professor</span>
+            <h3>Dr. Sibsankar Dasmahapatra</h3>
+            <p class="dir-quote">"Manufacturing paradigms are changing fast. Documenting milestones provides a vital map for the junior batches charting their courses."</p>
+          </div>
+        </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="samir-chakravarti.jpg" alt="Dr. Samir Chakravarti" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#2e1a1a;"><span>SC</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Assistant Professor</span>
+            <h3>Dr. Samir Chakravarti</h3>
+            <p class="dir-quote">"The foundation of thermodynamics and machine kinetics remains timeless. Seeing students apply these bedrock pillars is brilliant."</p>
+          </div>
+        </div>
+
+        <div class="directory-row">
+          <div class="dir-avatar-frame">
+            <img src="bidhan-biswas.jpg" alt="Mr. Bidhan Chandra Biswas" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="dir-avatar-fallback" style="background:#1a232e;"><span>BB</span></div>
+          </div>
+          <div class="dir-info">
+            <span class="message-role">Assistant Professor</span>
+            <h3>Mr. Bidhan Chandra Biswas</h3>
+            <p class="dir-quote">"A great engineer operates with systematic accuracy and deep focus. This complete volume echoes that structured effort."</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
