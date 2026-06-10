@@ -249,8 +249,12 @@ window.addEventListener('resize', () => { if (pdfDoc) renderSpread(currentSpread
 
 // ─── Navbar scroll ───
 window.addEventListener('scroll', () => {
-  document.getElementById('navbar').style.borderBottomColor =
-    window.scrollY > 20 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)';
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 30) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
 });
 
 // ─── Mobile hamburger ───

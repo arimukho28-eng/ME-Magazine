@@ -1,0 +1,387 @@
+/* ═══════════════════════════════════════════════════
+   IMPULSE — Effects CSS
+   Preloader · Scroll Reveal · Hover · Cursor
+   ═══════════════════════════════════════════════════ */
+
+/* ── Preloader ──────────────────────────────────── */
+body.preloading { overflow: hidden; }
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #07070f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+}
+
+#preloader-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+}
+
+.preloader-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+#preloader-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 16vw, 13rem);
+  letter-spacing: 0.12em;
+  color: #fff;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.05s, transform 0.05s;
+  /* Molten metal gradient */
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #ffe8b0 30%,
+    #ffaa22 55%,
+    #ff6600 75%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: metalSheen 2s linear infinite;
+  text-shadow: none;
+}
+
+@keyframes metalSheen {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+#preloader-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.85);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.preloader-progress {
+  width: 200px;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+#preloader-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #e84040, #ffaa22, #e84040);
+  background-size: 200% auto;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+  animation: barSheen 1.2s linear infinite;
+}
+@keyframes barSheen {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Cursor trail canvas ─────────────────────────── */
+#cursor-trail {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8000;
+}
+
+/* ── Scroll reveal ───────────────────────────────── */
+.sr-hidden {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1),
+              transform 0.65s cubic-bezier(0.22,1,0.36,1);
+}
+.sr-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* ── Navbar — more transparent, frosted ─────────── */
+#navbar {
+  background: rgba(7,7,15,0.55) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+  transition: background 0.3s, border-color 0.3s !important;
+}
+#navbar.scrolled {
+  background: rgba(7,7,15,0.78) !important;
+  border-bottom-color: rgba(255,255,255,0.09) !important;
+}
+
+/* ── Spirit cards — rich hover ───────────────────── */
+.spirit-card {
+  transition: transform 0.32s cubic-bezier(0.22,1,0.36,1),
+              background 0.28s, border-color 0.28s,
+              box-shadow 0.28s !important;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.spirit-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(232,64,64,0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.spirit-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  background: rgba(255,255,255,0.09) !important;
+  border-color: rgba(232,64,64,0.45) !important;
+  box-shadow: 0 16px 48px rgba(232,64,64,0.15), 0 0 0 1px rgba(232,64,64,0.2) !important;
+}
+.spirit-card:hover::before { opacity: 1; }
+.spirit-card:hover .spirit-icon {
+  transform: scale(1.25) rotate(10deg);
+  filter: drop-shadow(0 0 8px rgba(232,64,64,0.6));
+}
+.spirit-icon {
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s;
+  display: inline-block;
+}
+.spirit-card:hover h3 { color: #ff6b6b !important; }
+
+/* ── Message cards — gold hover ──────────────────── */
+.message-card {
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
+              background 0.28s, border-color 0.28s,
+              box-shadow 0.28s !important;
+  position: relative;
+  overflow: hidden;
+}
+.message-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+.message-card:hover {
+  transform: translateY(-6px) !important;
+  background: rgba(201,168,76,0.06) !important;
+  border-color: rgba(201,168,76,0.6) !important;
+  box-shadow: 0 16px 40px rgba(201,168,76,0.12) !important;
+}
+.message-card:hover::after { transform: scaleX(1); }
+.message-card:hover .message-name { color: var(--gold) !important; }
+
+.faculty-img, .message-avatar {
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.3s;
+}
+.message-card:hover .faculty-img,
+.message-card:hover .message-avatar {
+  transform: scale(1.08) rotate(-2deg);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.4);
+}
+
+/* ── Nav links — underline swipe ─────────────────── */
+.nav-links a:not(.nav-cta):not(.nav-special-link) {
+  position: relative;
+}
+.nav-links a:not(.nav-cta):not(.nav-special-link)::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 8px; right: 8px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s ease;
+}
+.nav-links a:not(.nav-cta):not(.nav-special-link):hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ── CTA button — pulse ring on hover ────────────── */
+.btn-primary {
+  position: relative;
+  overflow: visible !important;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 10px;
+  border: 2px solid rgba(232,64,64,0.5);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.25s, transform 0.25s;
+}
+.btn-primary:hover::after {
+  opacity: 1;
+  transform: scale(1.06);
+  animation: pulseBorder 1.2s ease infinite;
+}
+@keyframes pulseBorder {
+  0%,100% { transform: scale(1.06); opacity: 0.6; }
+  50%      { transform: scale(1.12); opacity: 0.2; }
+}
+
+/* ── Hero title — subtle glow on scroll stop ─────── */
+.hero-title {
+  position: relative;
+}
+.hero-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+/* ── Directory rows hover ────────────────────────── */
+.directory-row {
+  transition: background 0.25s, border-color 0.25s, transform 0.25s !important;
+  border-radius: 8px;
+}
+.directory-row:hover {
+  background: rgba(201,168,76,0.07) !important;
+  border-color: rgba(201,168,76,0.35) !important;
+  transform: translateX(6px) !important;
+}
+.directory-row:hover h3 { color: var(--gold) !important; }
+
+/* ── Section labels — animated underline ─────────── */
+.section-label {
+  position: relative;
+  display: inline-block;
+}
+.section-label::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.5s ease 0.2s;
+}
+.sr-visible .section-label::after { width: 100%; }
+
+/* ── Footer brand hover ──────────────────────────── */
+.footer-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.1em;
+  transition: color 0.3s, text-shadow 0.3s;
+  cursor: default;
+}
+.footer-title:hover {
+  color: var(--gold) !important;
+  text-shadow: 0 0 30px rgba(201,168,76,0.4);
+}
+
+/* ── Flipbook section header hover ───────────────── */
+.flipbook-section .section-title:hover {
+  background: linear-gradient(135deg, #fff, var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  cursor: default;
+}
+
+/* ── Smooth page entrance (hero) ─────────────────── */
+.hero-eyebrow   { animation: fadeUp 0.7s 0.1s both; }
+.hero-title     { animation: fadeUp 0.8s 0.25s both; }
+.hero-tagline   { animation: fadeUp 0.7s 0.42s both; }
+.hero-desc      { animation: fadeUp 0.7s 0.55s both; }
+.hero-actions   { animation: fadeUp 0.7s 0.68s both; }
+.hero-cover-art { animation: fadeIn 1s 0.8s both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Disable hero animations during preload (applied by JS) */
+body.preloading .hero-eyebrow,
+body.preloading .hero-title,
+body.preloading .hero-tagline,
+body.preloading .hero-desc,
+body.preloading .hero-actions,
+body.preloading .hero-cover-art {
+  animation: none;
+  opacity: 0;
+}
+/* Re-enable after preload done */
+body:not(.preloading) .hero-eyebrow   { animation: fadeUp 0.7s 0.05s both; }
+body:not(.preloading) .hero-title     { animation: fadeUp 0.8s 0.18s both; }
+body:not(.preloading) .hero-tagline   { animation: fadeUp 0.7s 0.32s both; }
+body:not(.preloading) .hero-desc      { animation: fadeUp 0.7s 0.44s both; }
+body:not(.preloading) .hero-actions   { animation: fadeUp 0.7s 0.56s both; }
+body:not(.preloading) .hero-cover-art { animation: fadeIn 1s 0.65s both; }
+
+/* ── Magnetic hover on Read Now button ───────────── */
+.nav-cta {
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+              background 0.2s, box-shadow 0.2s !important;
+}
+.nav-cta:hover {
+  transform: scale(1.07) translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(232,64,64,0.4) !important;
+}
+
+/* ── Glitch flicker on hero title (subtle) ───────── */
+@keyframes glitch {
+  0%,96%,100% { clip-path: none; transform: none; }
+  97% {
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    transform: translateX(-3px);
+    color: #ff6b6b;
+  }
+  98% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    transform: translateX(3px);
+    color: #66d9ff;
+  }
+  99% {
+    clip-path: none;
+    transform: none;
+    color: inherit;
+  }
+}
+.hero-title {
+  animation: fadeUp 0.8s 0.25s both, glitch 8s 2s infinite !important;
+}
+body.preloading .hero-title {
+  animation: none !important;
+  opacity: 0;
+}
+body:not(.preloading) .hero-title {
+  animation: fadeUp 0.8s 0.18s both, glitch 8s 3s infinite !important;
+}

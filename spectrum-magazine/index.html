@@ -5,9 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IMPULSE — Mechanical Engineering Magazine, KGEC</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="effects.css" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
 </head>
-<body>
+<body class="preloading">
+
+  <!-- ═══ PRELOADER ═══ -->
+  <div id="preloader">
+    <canvas id="preloader-canvas"></canvas>
+    <div class="preloader-content">
+      <div id="preloader-title">IMPULSE</div>
+      <div id="preloader-sub">Department of Mechanical Engineering · KGEC · 2026</div>
+      <div class="preloader-progress"><div id="preloader-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- cursor trail -->
+  <canvas id="cursor-trail"></canvas>
 
   <!-- ═══ NAVBAR ═══ -->
   <nav id="navbar">
@@ -366,6 +380,7 @@
     </div>
   </footer>
 
+  <script src="preloader.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="app.js"></script>
 </body>
