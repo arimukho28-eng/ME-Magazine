@@ -420,3 +420,172 @@ body {
   .hero-scroll-hint { animation: none; }
   * { transition-duration: 0.01ms !important; }
 }
+
+
+/* ══════════════════════════════════════════
+   SPECTRUM — Cover Card (Hero floating cover)
+   ══════════════════════════════════════════ */
+
+.hero-cover-art {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  will-change: transform;
+  /* JS drives the mouse-follow tilt; CSS handles the base float */
+}
+
+/* Continuous float animation — JS overrides with parallax on desktop */
+@keyframes floatY {
+  0%,100% { transform: translateY(0px) rotate(0deg); }
+  33%      { transform: translateY(-14px) rotate(0.5deg); }
+  66%      { transform: translateY(-6px) rotate(-0.4deg); }
+}
+
+.cover-card-link {
+  display: block;
+  text-decoration: none;
+  position: relative;
+}
+
+.cover-card {
+  width: 220px;
+  border-radius: 6px 14px 14px 6px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  animation: floatY 5s ease-in-out infinite;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.4),
+    0 20px 60px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(201,168,76,0.25);
+  transition: box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.cover-card:hover {
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.5),
+    0 32px 80px rgba(232,64,64,0.2),
+    0 0 0 1px rgba(201,168,76,0.5);
+  animation-play-state: paused; /* pause float on hover, JS handles tilt */
+}
+
+/* Glow rings */
+.cover-glow-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: pulseRing 3s ease-in-out infinite;
+}
+.ring-1 {
+  width: 280px; height: 280px;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(232,64,64,0.12) 0%, transparent 70%);
+  animation-delay: 0s;
+}
+.ring-2 {
+  width: 360px; height: 360px;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+  animation-delay: 1.5s;
+}
+@keyframes pulseRing {
+  0%,100% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%,-50%) scale(1.08); }
+}
+
+/* Real cover image */
+.cover-img-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, #1a1a35, #0d0d1a);
+}
+
+.cover-real-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder shown when cover-page.jpg is missing */
+.cover-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 8px;
+  padding: 28px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #1a1a35, #0d0d1a);
+}
+.cover-mock-dept  { font-size: .52rem; letter-spacing: .14em; color: var(--gold); text-transform: uppercase; line-height: 1.5; }
+.cover-mock-title { font-family: var(--font-display); font-size: 3.2rem; letter-spacing: .1em; color: var(--white); line-height: 1; }
+.cover-mock-year  { font-family: var(--font-display); font-size: 1.8rem; color: var(--accent); }
+.cover-mock-gear  { font-size: 2.5rem; opacity: .25; }
+
+/* Open hint overlay */
+.cover-open-hint {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(232,64,64,0.9) 0%, transparent 100%);
+  padding: 28px 12px 14px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 2;
+}
+.cover-open-hint span {
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.cover-card:hover .cover-open-hint { opacity: 1; }
+
+/* Drop shadow blob */
+.cover-shadow-blob {
+  position: absolute;
+  bottom: -28px; left: 10%; right: 10%;
+  height: 28px;
+  background: rgba(0,0,0,0.35);
+  filter: blur(14px);
+  border-radius: 50%;
+  animation: blobPulse 5s ease-in-out infinite;
+}
+@keyframes blobPulse {
+  0%,100% { transform: scaleX(1);   opacity: 0.35; }
+  50%      { transform: scaleX(0.85); opacity: 0.2; }
+}
+
+/* Responsive: hide cover art on small screens */
+@media (max-width: 860px) {
+  .hero-cover-art { display: none; }
+}
+
+/* Shine sweep on hover */
+.cover-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--shine-x, 50%) var(--shine-y, 50%),
+    rgba(255,255,255,0.12) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.cover-card:hover::after { opacity: 1; }

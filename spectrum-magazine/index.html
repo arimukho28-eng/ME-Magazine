@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IMPULSE — Mechanical Engineering Magazine</title>
+  <title>SPECTRUM — Mechanical Engineering Magazine, KGEC</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
+  <!-- ═══ NAVBAR ═══ -->
   <nav id="navbar">
     <div class="nav-inner">
       <div class="nav-logo-container">
         <img src="kgec-logo.png" alt="KGEC Logo" class="nav-college-logo" onerror="this.style.display='none'">
         <div class="nav-logo">
-          <span class="nav-logo-text">IMPULSE</span>
+          <span class="nav-logo-text">SPECTRUM</span>
           <span class="nav-logo-sub">ME · KGEC · '26</span>
         </div>
       </div>
@@ -38,13 +39,15 @@
     </div>
   </nav>
 
+  <!-- ═══ HERO ═══ -->
   <section id="home" class="hero">
     <div class="hero-bg-lines"></div>
+
     <div class="hero-content">
       <p class="hero-eyebrow">Department of Mechanical Engineering · KGEC · 2026</p>
-      <h1 class="hero-title">IMPULSE</h1>
+      <h1 class="hero-title">SPECTRUM</h1>
       <p class="hero-tagline">NO TECH WITHOUT MECH</p>
-      <p class="hero-desc">More than a magazine — a celebration of the vibrant momentum and driving force of the Department of Mechanical Engineering. Achievements, innovations, experiences, creativity, and aspirations, all in one edition.</p>
+      <p class="hero-desc">More than a magazine — a celebration of the vibrant spirit of the Department of Mechanical Engineering. Achievements, innovations, experiences, creativity, and aspirations, all in one edition.</p>
       <div class="hero-actions">
         <a href="#flipbook" class="btn-primary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -53,32 +56,60 @@
         <a href="#spirit" class="btn-ghost">Explore More</a>
       </div>
     </div>
-    <div class="hero-cover-art">
-      <div class="cover-mock">
-        <div class="cover-mock-inner">
-          <p class="cover-mock-dept">DEPT. OF MECHANICAL ENGINEERING</p>
-          <h2>IMPULSE</h2>
-          <p class="cover-mock-year">'26</p>
-          <div class="cover-mock-gear">⚙</div>
+
+    <!-- ── Floating cover card ── -->
+    <div class="hero-cover-art" id="coverArt">
+      <a href="#flipbook" class="cover-card-link" title="Open Magazine">
+        <div class="cover-card" id="coverCard">
+
+          <!-- Glow rings -->
+          <div class="cover-glow-ring ring-1"></div>
+          <div class="cover-glow-ring ring-2"></div>
+
+          <!-- If user has uploaded cover-page.jpg, show it; else show styled placeholder -->
+          <div class="cover-img-wrap">
+            <img
+              src="cover-page.jpg"
+              alt="SPECTRUM Magazine Cover"
+              class="cover-real-img"
+              id="coverImg"
+              onerror="this.style.display='none'; document.getElementById('coverPlaceholder').style.display='flex';"
+            />
+            <div class="cover-placeholder" id="coverPlaceholder">
+              <p class="cover-mock-dept">DEPT. OF MECHANICAL<br>ENGINEERING</p>
+              <h2 class="cover-mock-title">SPECTRUM</h2>
+              <p class="cover-mock-year">'26</p>
+              <div class="cover-mock-gear">⚙</div>
+            </div>
+          </div>
+
+          <!-- Overlay CTA -->
+          <div class="cover-open-hint">
+            <span>📖 Open Magazine</span>
+          </div>
         </div>
-        <div class="cover-mock-shadow"></div>
-      </div>
+
+        <!-- Shadow blob -->
+        <div class="cover-shadow-blob"></div>
+      </a>
     </div>
+
     <div class="hero-scroll-hint">
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </div>
   </section>
 
+  <!-- ═══ SPIRIT ═══ -->
   <section id="spirit" class="spirit">
     <div class="section-container">
       <div class="section-label">What We Are</div>
-      <h2 class="section-title">The Spirit of <em>Impulse</em></h2>
+      <h2 class="section-title">The Spirit of <em>Spectrum</em></h2>
       <div class="spirit-grid">
         <div class="spirit-card">
           <div class="spirit-icon">⚙️</div>
           <h3>Technical Evolution</h3>
-          <p>IMPULSE serves as a timeline capturing our shift toward modern industrial frontiers — reflecting student contributions in computational design, automation, thermal labs, and advanced automotive builds.</p>
+          <p>SPECTRUM serves as a timeline capturing our shift toward modern industrial frontiers — reflecting student contributions in computational design, automation, thermal labs, and advanced automotive builds.</p>
         </div>
         <div class="spirit-card">
           <div class="spirit-icon">🎨</div>
@@ -88,18 +119,19 @@
         <div class="spirit-card">
           <div class="spirit-icon">🏆</div>
           <h3>Legacy & Achievement</h3>
-          <p>From groundbreaking projects to campus triumphs, IMPULSE documents the milestones that define our batch — a living record for future generations to look back on.</p>
+          <p>From groundbreaking projects to campus triumphs, SPECTRUM documents the milestones that define our batch — a living record for future generations to look back on.</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ═══ MESSAGES ═══ -->
   <section id="messages" class="messages">
     <div class="section-container">
       <div class="section-label">From the Desk</div>
       <h2 class="section-title">Faculty Messages</h2>
       <div class="messages-grid-main">
-        
+
         <div class="message-card">
           <div class="message-avatar-container">
             <img src="td-sir.jpg" alt="Dr. Tridibesh Das" class="faculty-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -128,18 +160,17 @@
     </div>
   </section>
 
+  <!-- ═══ FACULTY OVERLAY ═══ -->
   <div id="facultyOverlayTab" class="faculty-overlay-tab" onclick="closeFacultyTab()">
     <div class="overlay-tab-content" onclick="event.stopPropagation()">
       <button class="overlay-close" onclick="closeFacultyTab()">&times;</button>
-      
       <div class="overlay-header">
         <span class="section-label">KGEC Mechanical Department</span>
         <h2 class="overlay-title">Faculty Directory</h2>
         <div class="overlay-header-line"></div>
       </div>
-
       <div class="overlay-grid-scroller">
-        
+
         <div class="directory-row">
           <div class="dir-avatar-frame">
             <img src="td-sir.jpg" alt="Dr. Tridibesh Das" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -264,16 +295,18 @@
     </div>
   </div>
 
+  <!-- ═══ FLIPBOOK ═══ -->
   <section id="flipbook" class="flipbook-section">
     <div class="section-container">
       <div class="section-label">Digital Edition</div>
       <h2 class="section-title">Read the Magazine</h2>
       <p class="flipbook-subtitle">Natively rendered · Zero ads · No watermark</p>
 
+      <!-- Upload zone — hidden once PDF auto-loads -->
       <div class="flipbook-upload-zone" id="uploadZone">
-        <div class="upload-icon">📄</div>
-        <h3>Upload Your Magazine PDF</h3>
-        <p>Drag &amp; drop the PDF here, or click to browse</p>
+        <div class="upload-icon">📖</div>
+        <h3>Loading Magazine…</h3>
+        <p>If the magazine doesn't load automatically, upload the PDF below.</p>
         <input type="file" id="pdfInput" accept=".pdf" hidden />
         <button class="btn-primary" onclick="document.getElementById('pdfInput').click()">Choose PDF</button>
         <p class="upload-note">The PDF stays in your browser — nothing is uploaded to any server.</p>
@@ -282,14 +315,14 @@
       <div class="flipbook-viewer" id="flipbookViewer" style="display:none;">
         <div class="flipbook-toolbar">
           <div class="toolbar-left">
-            <button class="tool-btn" id="prevBtn" title="Previous Page">&#8592; Prev</button>
+            <button class="tool-btn" id="prevBtn">&#8592; Prev</button>
             <span class="page-indicator"><span id="currentPage">1</span> / <span id="totalPages">?</span></span>
-            <button class="tool-btn" id="nextBtn" title="Next Page">Next &#8594;</button>
+            <button class="tool-btn" id="nextBtn">Next &#8594;</button>
           </div>
           <div class="toolbar-right">
-            <button class="tool-btn" id="zoomOut" title="Zoom Out">－</button>
-            <button class="tool-btn" id="zoomIn" title="Zoom In">＋</button>
-            <button class="tool-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+            <button class="tool-btn" id="zoomOut">－</button>
+            <button class="tool-btn" id="zoomIn">＋</button>
+            <button class="tool-btn" id="fullscreenBtn">⛶</button>
           </div>
         </div>
 
@@ -318,10 +351,11 @@
     </div>
   </section>
 
+  <!-- ═══ FOOTER ═══ -->
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <span class="footer-title">IMPULSE</span>
+        <span class="footer-title">SPECTRUM</span>
         <span class="footer-sub">Department of Mechanical Engineering</span>
         <span class="footer-sub">Kalyani Government Engineering College</span>
       </div>
