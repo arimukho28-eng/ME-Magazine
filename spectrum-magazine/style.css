@@ -509,16 +509,21 @@ body {
   background: linear-gradient(135deg, #1a1a35, #0d0d1a);
 }
 
+/* cover image */
 .cover-real-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-/* Placeholder shown when cover-page.jpg is missing */
+/* Placeholder shown ONLY when cover-page.jpg fails — hidden by default */
 .cover-placeholder {
-  display: flex;
+  display: none;
+  position: absolute;
+  inset: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;

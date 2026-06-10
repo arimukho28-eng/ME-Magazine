@@ -73,9 +73,10 @@
               alt="SPECTRUM Magazine Cover"
               class="cover-real-img"
               id="coverImg"
+              onload="this.style.opacity='1';"
               onerror="this.style.display='none'; document.getElementById('coverPlaceholder').style.display='flex';"
             />
-            <div class="cover-placeholder" id="coverPlaceholder">
+            <div class="cover-placeholder" id="coverPlaceholder" style="display:none;">
               <p class="cover-mock-dept">DEPT. OF MECHANICAL<br>ENGINEERING</p>
               <h2 class="cover-mock-title">SPECTRUM</h2>
               <p class="cover-mock-year">'26</p>
