@@ -17,7 +17,7 @@
   --font-serif:   'Playfair Display', serif;
   --font-body:    'Inter', sans-serif;
 
-  --nav-h: 64px;
+  --nav-h: 74px; /* Slightly taller for cleaner layout alignment */
   --radius: 12px;
 }
 
@@ -30,7 +30,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── NAVBAR ─── */
+/* ─── NAVBAR WITH LOGO ─── */
 #navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   background: rgba(10,10,15,0.92);
@@ -43,8 +43,18 @@ body {
   height: 100%; padding: 0 24px;
   display: flex; align-items: center; justify-content: space-between;
 }
+.nav-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-college-logo {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+}
 .nav-logo { display: flex; flex-direction: column; line-height: 1; }
-.nav-logo-text { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .1em; color: var(--white); }
+.nav-logo-text { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: .08em; color: var(--white); }
 .nav-logo-sub { font-size: .6rem; letter-spacing: .2em; color: var(--text-muted); text-transform: uppercase; }
 .nav-links { list-style: none; display: flex; gap: 8px; align-items: center; }
 .nav-links a { text-decoration: none; color: rgba(255,255,255,.7); font-size: .85rem; font-weight: 500; letter-spacing: .04em; padding: 6px 14px; border-radius: 6px; transition: all .2s; }
@@ -164,7 +174,7 @@ body {
 .spirit-card h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; color: var(--white); }
 .spirit-card p { font-size: .9rem; line-height: 1.75; color: rgba(255,255,255,.6); }
 
-/* ─── MESSAGES ─── */
+/* ─── FACULTY SECTION UPDATES ─── */
 .messages { background: var(--ink); }
 .messages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; }
 .message-card {
@@ -174,17 +184,69 @@ body {
   border-left: 3px solid var(--gold);
   border-radius: var(--radius);
   padding: 32px 28px;
+  align-items: flex-start;
+  transition: all 0.2s ease;
+}
+.card-interactive { cursor: pointer; }
+.card-interactive:hover {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(201,168,76,0.5);
+  transform: translateY(-2px);
+}
+.message-avatar-container {
+  width: 64px; height: 64px; flex-shrink: 0;
+  position: relative;
+}
+.faculty-img {
+  width: 100%; height: 100%; border-radius: 50%;
+  object-fit: cover; border: 2px solid rgba(201,168,76,.4);
 }
 .message-avatar {
-  width: 56px; height: 56px; border-radius: 50%;
+  width: 100%; height: 100%; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 1.1rem;
+  font-family: var(--font-display); font-size: 1.2rem;
   color: var(--gold); border: 2px solid rgba(201,168,76,.3);
-  flex-shrink: 0;
 }
-.message-role { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); }
-.message-name { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 700; margin: 6px 0 14px; }
+.message-role { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); display: block; }
+.message-name { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 700; margin: 4px 0 12px; }
 .message-body blockquote { font-size: .9rem; line-height: 1.75; color: rgba(255,255,255,.65); font-style: italic; }
+.view-popup-hint { font-size: 0.7rem; color: var(--gold); display: block; margin-top: 10px; opacity: 0.6; letter-spacing: 0.05em; font-weight: 500; }
+.message-card:hover .view-popup-hint { opacity: 1; text-decoration: underline; }
+
+/* ─── FACULTY POPUP MODAL STYLES ─── */
+.faculty-modal {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(5, 5, 8, 0.85);
+  backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; transition: opacity 0.3s ease;
+}
+.faculty-modal.open { display: flex; opacity: 1; }
+.modal-content {
+  background: #12121f;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 4px solid var(--gold);
+  border-radius: var(--radius);
+  max-width: 680px; width: 100%;
+  position: relative; padding: 40px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+  transform: translateY(-20px); transition: transform 0.3s ease;
+}
+.faculty-modal.open .modal-content { transform: translateY(0); }
+.modal-close {
+  position: absolute; top: 16px; right: 20px;
+  background: none; border: none; color: rgba(255,255,255,0.5);
+  font-size: 2rem; cursor: pointer; transition: color 0.2s;
+}
+.modal-close:hover { color: var(--white); }
+.modal-body-layout { display: flex; gap: 32px; align-items: center; }
+.modal-img-frame { width: 180px; height: 180px; flex-shrink: 0; }
+.modal-img-frame img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold); }
+.modal-text-frame { flex: 1; }
+.modal-faculty-title { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 700; margin: 6px 0 12px; color: var(--white); }
+.modal-divider { width: 60px; height: 2px; background: var(--accent); margin-bottom: 16px; }
+.modal-quote-text { font-size: 1rem; line-height: 1.8; color: rgba(255,255,255,0.8); font-style: italic; margin-bottom: 20px; }
+.modal-affiliation { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; letter-spacing: 0.02em; }
 
 /* ─── FLIPBOOK SECTION ─── */
 .flipbook-section { background: #0d0d1a; }
@@ -311,6 +373,8 @@ body {
   .single-page-view { display: flex !important; }
   .messages-grid { grid-template-columns: 1fr; }
   .message-card { flex-direction: column; }
+  .modal-body-layout { flex-direction: column; text-align: center; gap: 16px; }
+  .modal-content { padding: 30px 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-scroll-hint { animation: none; }
