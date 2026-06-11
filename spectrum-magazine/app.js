@@ -108,150 +108,98 @@ async function loadPDFFromBuffer(arrayBuffer) {
 }
 
 // ─── Render spread ───
-async function renderSpread(leftPageNo) {
-  isMobile = window.innerWidth <= 700;
+let pageFlipInstance = null;
 
-  const bookSpreadEl  = document.querySelector('.book-spread');
-  const singlePageEl  = document.getElementById('singlePageView');
+async function loadPDFFromBuffer(arrayBuffer) {
+  pdfDoc     = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  totalPages = pdfDoc.numPages;
+  totalPagesEl.textContent = totalPages;
 
-  if (isMobile) {
-    bookSpreadEl.style.display  = 'none';
-    singlePageEl.style.display  = 'block';
-    await renderSinglePage(leftPageNo);
-  } else {
-    bookSpreadEl.style.display  = 'flex';
-    singlePageEl.style.display  = 'none';
-    await renderTwoPageSpread(leftPageNo);
-  }
+  uploadZone.style.display     = 'none';
+  flipbookViewer.style.display = 'flex';
 
-  currentPageEl.textContent = leftPageNo;
-  prevBtn.disabled = leftPageNo <= 1;
-  nextBtn.disabled = isMobile ? leftPageNo >= totalPages : leftPageNo + 1 >= totalPages;
-
-  document.querySelectorAll('.thumb-item').forEach(el => {
-    el.classList.toggle('active', parseInt(el.dataset.page) === leftPageNo);
-  });
-  const activeThumb = document.querySelector(`.thumb-item[data-page="${leftPageNo}"]`);
-  if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  await render3DMagazine();
 }
 
-async function renderTwoPageSpread(leftPageNo) {
-  const stageWidth  = flipbookStage.clientWidth  - 80;
-  const stageHeight = flipbookStage.clientHeight - 64;
+async function render3DMagazine() {
+  const container = document.getElementById('magazine-3d-book');
+  container.innerHTML = ''; 
 
-  const page    = await pdfDoc.getPage(leftPageNo);
-  const viewport = page.getViewport({ scale: 1 });
-  const aspect  = viewport.height / viewport.width;
+  const stageWidth = flipbookStage.clientWidth - 40;
+  const isSinglePageMode = window.innerWidth <= 700;
 
-  let pageW = Math.min((stageWidth / 2) - 20, 500) * scale;
-  let pageH = pageW * aspect;
-  if (pageH > stageHeight) { pageH = stageHeight; pageW = pageH / aspect; }
+  const basePage = await pdfDoc.getPage(1);
+  const baseViewport = basePage.getViewport({ scale: 1 });
+  const pageAspect = baseViewport.height / baseViewport.width;
 
-  await drawPage(leftCanvas, leftPageNo, pageW, pageH);
-  leftPageNum.textContent = leftPageNo;
+  let targetPageWidth = isSinglePageMode ? Math.min(stageWidth, 420) : Math.min(stageWidth / 2, 460);
+  let targetPageHeight = targetPageWidth * pageAspect;
 
-  const rightPageNo = leftPageNo + 1;
-  const rightWrapper = document.getElementById('rightPageWrapper');
-  const spineEl      = document.querySelector('.book-spine');
-
-  if (rightPageNo <= totalPages) {
-    rightWrapper.style.display = 'block';
-    spineEl.style.display      = 'block';
-    await drawPage(rightCanvas, rightPageNo, pageW, pageH);
-    rightPageNum.textContent = rightPageNo;
-  } else {
-    rightCanvas.width  = pageW;
-    rightCanvas.height = pageH;
-    const ctx = rightCanvas.getContext('2d');
-    ctx.fillStyle = '#f9f7f2';
-    ctx.fillRect(0, 0, pageW, pageH);
-    rightPageNum.textContent = '';
-  }
-}
-
-async function renderSinglePage(pageNo) {
-  const stageWidth  = flipbookStage.clientWidth  - 32;
-  const stageHeight = flipbookStage.clientHeight - 40;
-
-  const page    = await pdfDoc.getPage(pageNo);
-  const viewport = page.getViewport({ scale: 1 });
-  const aspect  = viewport.height / viewport.width;
-
-  let w = Math.min(stageWidth, 480) * scale;
-  let h = w * aspect;
-  if (h > stageHeight) { h = stageHeight; w = h / aspect; }
-
-  await drawPage(singleCanvas, pageNo, w, h);
-  singlePageNum.textContent = `${pageNo} / ${totalPages}`;
-}
-
-async function drawPage(canvas, pageNo, w, h) {
-  const page     = await pdfDoc.getPage(pageNo);
-  const vp       = page.getViewport({ scale: w / page.getViewport({ scale: 1 }).width });
-  canvas.width   = Math.floor(vp.width);
-  canvas.height  = Math.floor(vp.height);
-  await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-}
-
-// ─── Thumbnails ───
-async function buildThumbnails() {
-  thumbnailStrip.innerHTML = '';
   for (let i = 1; i <= totalPages; i++) {
-    const page    = await pdfDoc.getPage(i);
-    const vp      = page.getViewport({ scale: 1 });
-    const thumbVP = page.getViewport({ scale: THUMB_HEIGHT / vp.height });
+    const pageContainer = document.createElement('div');
+    pageContainer.className = 'page-3d-wrap';
 
-    const canvas   = document.createElement('canvas');
-    canvas.width   = Math.floor(thumbVP.width);
-    canvas.height  = Math.floor(thumbVP.height);
-    await page.render({ canvasContext: canvas.getContext('2d'), viewport: thumbVP }).promise;
+    if (i === 1 || i === totalPages) {
+      pageContainer.setAttribute('data-density', 'hard');
+    }
 
-    const item = document.createElement('div');
-    item.className   = 'thumb-item';
-    item.dataset.page = i;
-    item.appendChild(canvas);
-    item.addEventListener('click', () => { currentSpread = i; renderSpread(currentSpread); });
-    thumbnailStrip.appendChild(item);
+    const canvas = document.createElement('canvas');
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    pageContainer.appendChild(canvas);
+    container.appendChild(pageContainer);
+
+    const page = await pdfDoc.getPage(i);
+    const renderViewport = page.getViewport({ scale: (targetPageWidth / baseViewport.width) * 2 });
+    canvas.width = renderViewport.width;
+    canvas.height = renderViewport.height;
+
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport: renderViewport }).promise;
   }
+
+  container.style.opacity = '1';
+
+  pageFlipInstance = new St.PageFlip(container, {
+    width: targetPageWidth,
+    height: targetPageHeight,
+    size: "fixed",
+    minWidth: 260,
+    maxWidth: 600,
+    minHeight: 350,
+    maxHeight: 900,
+    drawShadow: true,
+    showCover: true,
+    useMouseEvents: true, 
+    useTouchEvents: true  
+  });
+
+  pageFlipInstance.loadFromHTML(document.querySelectorAll('.page-3d-wrap'));
+  currentPageEl.textContent = 1;
+
+  pageFlipInstance.on('flip', (e) => {
+    currentPageEl.textContent = e.data + 1;
+    prevBtn.disabled = e.data === 0;
+    nextBtn.disabled = e.data >= totalPages - 2;
+  });
 }
 
-// ─── Controls ───
-prevBtn.addEventListener('click', () => {
-  if (isMobile) {
-    if (currentSpread > 1) { currentSpread--; renderSpread(currentSpread); }
-  } else {
-    if (currentSpread > 1) { currentSpread = Math.max(1, currentSpread - 2); renderSpread(currentSpread); }
-  }
-});
-nextBtn.addEventListener('click', () => {
-  if (isMobile) {
-    if (currentSpread < totalPages) { currentSpread++; renderSpread(currentSpread); }
-  } else {
-    if (currentSpread + 1 < totalPages) { currentSpread += 2; renderSpread(currentSpread); }
-  }
-});
-zoomIn.addEventListener('click',  () => { scale = Math.min(scale + 0.2, 2.5); renderSpread(currentSpread); });
-zoomOut.addEventListener('click', () => { scale = Math.max(scale - 0.2, 0.4); renderSpread(currentSpread); });
+prevBtn.addEventListener('click', () => { pageFlipInstance?.flipPrev(); });
+nextBtn.addEventListener('click', () => { pageFlipInstance?.flipNext(); });
+
+zoomIn.addEventListener('click', () => { scale = Math.min(scale + 0.1, 1.5); render3DMagazine(); });
+zoomOut.addEventListener('click', () => { scale = Math.max(scale - 0.1, 0.8); render3DMagazine(); });
+
 fullscreenBtn.addEventListener('click', () => {
   const el = document.getElementById('flipbook');
   if (!document.fullscreenElement) el.requestFullscreen?.();
   else document.exitFullscreen?.();
 });
 
-// ─── Keyboard ───
 document.addEventListener('keydown', (e) => {
-  if (!pdfDoc) return;
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextBtn.click();
-  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prevBtn.click();
+  if (!pageFlipInstance) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') pageFlipInstance.flipNext();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') pageFlipInstance.flipPrev();
 });
-
-// ─── Touch swipe ───
-let touchStartX = 0;
-flipbookStage.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
-flipbookStage.addEventListener('touchend', (e) => {
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 50) { dx < 0 ? nextBtn.click() : prevBtn.click(); }
-}, { passive: true });
 
 // ─── Resize ───
 window.addEventListener('resize', () => { if (pdfDoc) renderSpread(currentSpread); });
