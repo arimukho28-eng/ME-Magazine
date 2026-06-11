@@ -385,3 +385,34 @@ body.preloading .hero-title {
 body:not(.preloading) .hero-title {
   animation: fadeUp 0.8s 0.18s both, glitch 8s 3s infinite !important;
 }
+
+/* ── Preloader Gears ────────────────────────────── */
+.gears-container {
+  position: relative;
+  width: 130px;
+  height: 90px;
+  margin-bottom: 10px;
+}
+.gear {
+  position: absolute;
+  transform-origin: center center;
+  filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
+}
+.gear-left {
+  top: 5px;
+  left: 10px;
+  animation: gearClockwise 4s linear infinite;
+}
+.gear-right {
+  top: 32px;
+  left: 68px;
+  animation: gearCounterClockwise 3s linear infinite;
+}
+@keyframes gearClockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes gearCounterClockwise {
+  0% { transform: rotate(15deg); }
+  100% { transform: rotate(-345deg); }
+}
