@@ -6,19 +6,27 @@
   <title>IMPULSE — Mechanical Engineering Magazine, KGEC</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="effects.css" />
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
 </head>
 <body class="preloading">
 
   <!-- ═══ PRELOADER ═══ -->
   <div id="preloader">
-    <canvas id="preloader-canvas"></canvas>
-    <div class="preloader-content">
-      <div id="preloader-title">IMPULSE</div>
-      <div id="preloader-sub">Department of Mechanical Engineering · KGEC · 2026</div>
-      <div class="preloader-progress"><div id="preloader-bar"></div></div>
+  <div class="preloader-content">
+    <div class="gears-container">
+      <svg class="gear gear-left" viewBox="0 0 100 100" width="80" height="80">
+        <path fill="#c9a84c" d="M50,30 C39,30 30,39 30,50 C30,61 39,70 50,70 C61,70 70,61 70,50 C70,39 61,30 50,30 Z M50,0 L55,15 L65,10 L65,25 L78,20 L73,34 L85,35 L77,47 L88,53 L77,59 L83,71 L70,72 L73,86 L59,82 L55,96 L45,96 L41,82 L27,86 L30,72 L17,71 L23,59 L12,53 L23,47 L15,35 L27,34 L22,20 L35,25 L35,10 L45,15 Z"/>
+      </svg>
+      <svg class="gear gear-right" viewBox="0 0 100 100" width="60" height="60">
+        <path fill="#e84040" d="M50,30 C39,30 30,39 30,50 C30,61 39,70 50,70 C61,70 70,61 70,50 C70,39 61,30 50,30 Z M50,0 L55,15 L65,10 L65,25 L78,20 L73,34 L85,35 L77,47 L88,53 L77,59 L83,71 L70,72 L73,86 L59,82 L55,96 L45,96 L41,82 L27,86 L30,72 L17,71 L23,59 L12,53 L23,47 L15,35 L27,34 L22,20 L35,25 L35,10 L45,15 Z"/>
+      </svg>
     </div>
+    <div id="preloader-title">IMPULSE</div>
+    <div id="preloader-sub">Department of Mechanical Engineering · KGEC · 2026</div>
+    <div class="preloader-progress"><div id="preloader-bar"></div></div>
   </div>
+</div>
 
   <!-- cursor trail -->
   <canvas id="cursor-trail"></canvas>
@@ -342,24 +350,8 @@
         </div>
 
         <div class="flipbook-stage" id="flipbookStage">
-          <div class="book-container" id="bookContainer">
-            <div class="book-spread">
-              <div class="page-wrapper left-page" id="leftPageWrapper">
-                <canvas id="leftCanvas"></canvas>
-                <div class="page-number left-num" id="leftPageNum"></div>
-              </div>
-              <div class="book-spine"></div>
-              <div class="page-wrapper right-page" id="rightPageWrapper">
-                <canvas id="rightCanvas"></canvas>
-                <div class="page-number right-num" id="rightPageNum"></div>
-              </div>
-            </div>
-          </div>
-          <div class="single-page-view" id="singlePageView" style="display:none;">
-            <canvas id="singleCanvas"></canvas>
-            <div class="page-number" id="singlePageNum"></div>
-          </div>
-        </div>
+          <div id="magazine-3d-book" style="opacity: 0; transition: opacity 0.4s ease;"></div>
+      </div>
 
         <div class="flipbook-thumbnails" id="thumbnailStrip"></div>
       </div>
