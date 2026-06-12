@@ -73,8 +73,9 @@ body {
 /* ─── HERO ─── */
 .hero {
   min-height: 100vh;
-  display: flex; align-items: center;
-  padding-top: var(--nav-h);
+  display: flex;
+  align-items: center;
+  padding-top: calc(var(--nav-h) - 20px);
   position: relative;
   overflow: hidden;
   background: radial-gradient(ellipse at 70% 50%, #1a1a35 0%, var(--ink) 60%);
