@@ -142,7 +142,7 @@ function initCounters() {
 // ══════════════════════════════════════════════════
 function initSectionEffects() {
 
-  // Track global mouse position (page coords)
+  // Track global mouse position
   let gMouseX = window.innerWidth / 2;
   let gMouseY = window.innerHeight / 2;
   window.addEventListener('mousemove', e => {
@@ -153,105 +153,89 @@ function initSectionEffects() {
   // ── Helper: create canvas overlaid on a section ──
   function createSectionCanvas(section) {
     const cv = document.createElement('canvas');
-    cv.style.cssText = `
-      position:absolute; inset:0; width:100%; height:100%;
-      pointer-events:none; z-index:0;
-    `;
+    cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;';
     section.style.position = 'relative';
     section.insertBefore(cv, section.firstChild);
-    function resize() {
-      cv.width  = section.offsetWidth;
-      cv.height = section.offsetHeight;
-    }
+    function resize() { cv.width = section.offsetWidth; cv.height = section.offsetHeight; }
     resize();
     window.addEventListener('resize', resize);
     return cv;
   }
 
   // ════════════════════════════════════════════════
-  //  HERO + MESSAGES — Blue dot cluster (like screenshot)
-  //  Dots orbit/collect around mouse center
+  //  HERO + MESSAGES — tiny sharp scattered star-points
+  //  Spread evenly across the whole section.
+  //  Mouse proximity causes a subtle local glow.
   // ════════════════════════════════════════════════
-  function initDotCloud(section) {
+  function initStarfield(section) {
     const cv  = createSectionCanvas(section);
     const ctx = cv.getContext('2d');
+    const GLOW_RADIUS = 130; // px — how close mouse must be to light a dot
 
-    const COUNT = 220;
-    const dots  = [];
-
-    for (let i = 0; i < COUNT; i++) {
-      // Spawn in a soft elliptical cloud pattern
-      const angle  = Math.random() * Math.PI * 2;
-      const radius = 80 + Math.random() * 300;
-      dots.push({
-        // home position relative to mouse — will update dynamically
-        angle,
-        radius,
-        // current screen pos
-        x: cv.width  / 2 + Math.cos(angle) * radius,
-        y: cv.height / 2 + Math.sin(angle) * radius,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: 1.5 + Math.random() * 2.8,   // small oval-ish dots
-        // soft blue palette — matching screenshot
-        blue: 170 + Math.floor(Math.random() * 60),  // hue 210-240
-        alpha: 0.35 + Math.random() * 0.5,
-        baseAlpha: 0,
-        // Individual drift phase
-        phase: Math.random() * Math.PI * 2,
-        driftSpeed: 0.003 + Math.random() * 0.006,
-      });
+    // Seed once, then only update on resize
+    let stars = [];
+    function seed() {
+      stars = [];
+      // ~1 star per 4000px² — dense enough to feel present, sparse enough to feel fine
+      const count = Math.floor((cv.width * cv.height) / 3800);
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x:    Math.random() * cv.width,
+          y:    Math.random() * cv.height,
+          r:    0.35 + Math.random() * 0.65,   // 0.35–1px — very small
+          baseAlpha: 0.08 + Math.random() * 0.18, // nearly invisible at rest
+          // slow drift
+          vx:   (Math.random() - 0.5) * 0.06,
+          vy:   (Math.random() - 0.5) * 0.06,
+          // hue: mostly cool white/blue, occasional warm
+          hue:  Math.random() < 0.7
+                  ? 210 + Math.random() * 40    // blue-white
+                  : 38  + Math.random() * 20,   // warm gold
+        });
+      }
     }
-    dots.forEach(d => d.baseAlpha = d.alpha);
+    seed();
+    window.addEventListener('resize', () => { seed(); });
 
-    let t = 0;
     function loop() {
       requestAnimationFrame(loop);
       ctx.clearRect(0, 0, cv.width, cv.height);
 
-      // Mouse pos relative to section
-      const rect = section.getBoundingClientRect();
-      const localMX = gMouseX - rect.left;
-      const localMY = gMouseY - rect.top;
+      const rect  = section.getBoundingClientRect();
+      const lx    = gMouseX - rect.left;
+      const ly    = gMouseY - rect.top;
 
-      t += 0.016;
+      stars.forEach(s => {
+        // Gentle drift
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < 0)        s.x = cv.width;
+        if (s.x > cv.width) s.x = 0;
+        if (s.y < 0)        s.y = cv.height;
+        if (s.y > cv.height) s.y = 0;
 
-      dots.forEach(d => {
-        // Drift angle slowly
-        d.phase += d.driftSpeed;
+        // Mouse proximity — smooth falloff
+        const dx   = s.x - lx;
+        const dy   = s.y - ly;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const prox = dist < GLOW_RADIUS
+                       ? 1 - (dist / GLOW_RADIUS)   // 0→1 as mouse approaches
+                       : 0;
 
-        // Target: offset from mouse in elliptical cloud
-        const tx = localMX + Math.cos(d.angle + d.phase * 0.4) * d.radius;
-        const ty = localMY + Math.sin(d.angle + d.phase * 0.4) * d.radius * 0.65; // flatten vertically
-
-        // Spring toward target
-        const dx = tx - d.x;
-        const dy = ty - d.y;
-        d.vx += dx * 0.018;
-        d.vy += dy * 0.018;
-        d.vx *= 0.88;
-        d.vy *= 0.88;
-        d.x  += d.vx;
-        d.y  += d.vy;
-
-        // Fade out dots near edges
-        const edgeFade = Math.min(
-          d.x / 40, (cv.width  - d.x) / 40,
-          d.y / 40, (cv.height - d.y) / 40,
-          1
-        );
-        const alpha = Math.max(0, d.baseAlpha * edgeFade);
+        // Boost alpha subtly — max glow still only ~0.65
+        const alpha = s.baseAlpha + prox * 0.47;
+        const glow  = prox * 5;     // shadowBlur 0→5px max — barely visible
+        const radius = s.r + prox * 0.8;
 
         ctx.save();
         ctx.globalAlpha = alpha;
-        // Blue-purple dots with soft glow — matching screenshot aesthetic
-        const hue = 215 + (d.blue - 170) / 60 * 25; // 215–240
-        ctx.fillStyle = `hsl(${hue}, 80%, 72%)`;
-        ctx.shadowColor = `hsl(${hue}, 90%, 75%)`;
-        ctx.shadowBlur  = 4;
+        ctx.fillStyle   = `hsl(${s.hue}, 70%, 82%)`;
+        if (prox > 0.05) {
+          ctx.shadowColor = `hsl(${s.hue}, 90%, 88%)`;
+          ctx.shadowBlur  = glow;
+        }
         ctx.beginPath();
-        // Slight oval to match screenshot dots
-        ctx.ellipse(d.x, d.y, d.size, d.size * 1.45, 0, 0, Math.PI * 2);
+        ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       });
@@ -261,8 +245,90 @@ function initSectionEffects() {
 
   const heroSection     = document.getElementById('home');
   const messagesSection = document.getElementById('messages');
-  if (heroSection)     initDotCloud(heroSection);
-  if (messagesSection) initDotCloud(messagesSection);
+  if (heroSection)     initStarfield(heroSection);
+  if (messagesSection) initStarfield(messagesSection);
+
+  // ── Canvas heartbeat shimmer on IMPULSE title ──
+  // Draws a small glowing pulse that blooms near the end
+  // of the word and fades — no CSS line artifacts
+  (function initHeartbeatCanvas() {
+    const wrap = document.querySelector('.hero-title-wrap');
+    const title = document.querySelector('.hero-title');
+    if (!wrap || !title) return;
+
+    const cv  = document.createElement('canvas');
+    cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;';
+    wrap.appendChild(cv);
+
+    function resize() {
+      cv.width  = wrap.offsetWidth;
+      cv.height = wrap.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const ctx = cv.getContext('2d');
+    let t = 0;
+
+    // Heartbeat: one clean QRS pulse every ~3 seconds
+    // Phase 0–1 over 3s.  Pulse fires at phase ~0.05, fully gone by 0.25.
+    function loop() {
+      requestAnimationFrame(loop);
+      t += 0.008; // ~0.5 cycles/sec at 60fps
+      if (t > 1) t -= 1;
+
+      ctx.clearRect(0, 0, cv.width, cv.height);
+
+      // Pulse envelope — sharp rise, fast decay, silence the rest
+      let env = 0;
+      if (t < 0.08) {
+        // Rise: 0→peak
+        env = t / 0.08;
+      } else if (t < 0.18) {
+        // Decay: peak→0
+        env = 1 - (t - 0.08) / 0.10;
+      }
+      // env is 0 for the other 82% of the cycle — pure silence
+
+      if (env < 0.005) return; // nothing to draw
+
+      // Position: right ~15% of the title width (near the 'E')
+      const cx = cv.width  * 0.88;
+      const cy = cv.height * 0.50;
+
+      // Outer soft halo — radial gradient, feathered
+      const haloR = cv.height * 0.9 * env;
+      const grad  = ctx.createRadialGradient(cx, cy, 0, cx, cy, haloR);
+      grad.addColorStop(0,   `rgba(255, 210, 80, ${0.55 * env})`);
+      grad.addColorStop(0.3, `rgba(255, 160, 40, ${0.30 * env})`);
+      grad.addColorStop(0.7, `rgba(255, 100, 20, ${0.10 * env})`);
+      grad.addColorStop(1,   `rgba(255,  80, 10, 0)`);
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, haloR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Tight bright core point
+      const coreR = cv.height * 0.18 * env;
+      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+      coreGrad.addColorStop(0,   `rgba(255, 245, 180, ${0.9 * env})`);
+      coreGrad.addColorStop(0.5, `rgba(255, 200, 80,  ${0.5 * env})`);
+      coreGrad.addColorStop(1,   `rgba(255, 160, 40,  0)`);
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    loop();
+  })();
 
   // ════════════════════════════════════════════════
   //  SPIRIT SECTION — Floating micro-gear particles
