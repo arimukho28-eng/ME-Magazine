@@ -293,7 +293,7 @@ function initSectionEffects() {
       if (env < 0.005) return; // nothing to draw
 
       // Position: right ~15% of the title width (near the 'E')
-      const cx = cv.width  * 0.88;
+      const cx = cv.width  * 0.80;
       const cy = cv.height * 0.50;
 
       // Outer soft halo — radial gradient, feathered
