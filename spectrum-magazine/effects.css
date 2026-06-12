@@ -163,7 +163,7 @@ body.preloading { overflow: hidden; }
   top: 15px;
   left: 69px;
   filter: drop-shadow(0 0 8px rgba(232,64,64,0.55));
-  animation: spinCCW 2.6667s linear infinite;
+  animation: spinCCW 1.4s linear infinite;
 }
 
 @keyframes spinCW  {
