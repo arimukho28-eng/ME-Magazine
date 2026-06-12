@@ -274,7 +274,7 @@ function initSectionEffects() {
     // Phase 0–1 over 3s.  Pulse fires at phase ~0.05, fully gone by 0.25.
     function loop() {
       requestAnimationFrame(loop);
-      t += 0.008; // ~0.5 cycles/sec at 60fps
+      t += 0.038; // ~0.5 cycles/sec at 60fps
       if (t > 1) t -= 1;
 
       ctx.clearRect(0, 0, cv.width, cv.height);
