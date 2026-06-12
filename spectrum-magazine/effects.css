@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════
    IMPULSE — Effects CSS
-   Preloader · Scroll Reveal · Hover · Cursor
+   Preloader · Scroll Reveal · Hover · Cursor · Particles
    ═══════════════════════════════════════════════════ */
 
 /* ── Preloader ──────────────────────────────────── */
@@ -16,6 +16,7 @@ body.preloading { overflow: hidden; }
   align-items: center;
   justify-content: center;
   pointer-events: all;
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 #preloader-canvas {
@@ -35,6 +36,18 @@ body.preloading { overflow: hidden; }
   pointer-events: none;
 }
 
+/* ── ZAP flash overlay ─────────────────────────── */
+.zap-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: radial-gradient(ellipse at center, rgba(255,200,50,0.9) 0%, rgba(255,100,0,0.5) 40%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.08s ease;
+}
+.zap-flash.active { opacity: 1; }
+
 #preloader-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(5rem, 16vw, 13rem);
@@ -42,9 +55,8 @@ body.preloading { overflow: hidden; }
   color: #fff;
   line-height: 1;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.05s, transform 0.05s;
-  /* Molten metal gradient */
+  transform: translateY(20px) scale(0.9);
+  transition: opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1);
   background: linear-gradient(
     135deg,
     #ffffff 0%,
@@ -58,6 +70,12 @@ body.preloading { overflow: hidden; }
   -webkit-text-fill-color: transparent;
   animation: metalSheen 2s linear infinite;
   text-shadow: none;
+  will-change: opacity, transform;
+}
+
+#preloader-title.revealed {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
 }
 
 @keyframes metalSheen {
@@ -72,7 +90,12 @@ body.preloading { overflow: hidden; }
   text-transform: uppercase;
   color: rgba(201,168,76,0.85);
   opacity: 0;
-  transition: opacity 0.4s;
+  transform: translateY(10px);
+  transition: opacity 0.45s ease 0.12s, transform 0.45s ease 0.12s;
+}
+#preloader-sub.revealed {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 .preloader-progress {
@@ -82,7 +105,10 @@ body.preloading { overflow: hidden; }
   border-radius: 2px;
   overflow: hidden;
   margin-top: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.2s;
 }
+.preloader-progress.revealed { opacity: 1; }
 
 #preloader-bar {
   height: 100%;
@@ -98,12 +124,65 @@ body.preloading { overflow: hidden; }
   100% { background-position: 200% center; }
 }
 
+/* ── Proper Interlocking Gear Styles ───────────── */
+.gears-container {
+  position: relative;
+  width: 160px;
+  height: 110px;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: gearsAppear 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+}
+@keyframes gearsAppear {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.gear-svg {
+  position: absolute;
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 0 10px rgba(255,160,30,0.5));
+  overflow: visible;
+}
+
+/* Gear 1: large, left — 12 teeth, radius 44 */
+.gear-big {
+  width: 92px;
+  height: 92px;
+  top: 0;
+  left: 0;
+  animation: spinCW 4s linear infinite;
+}
+
+/* Gear 2: small, right — 8 teeth, radius 30 — gear ratio 12:8 = 1.5x speed */
+.gear-small {
+  width: 62px;
+  height: 62px;
+  top: 20px;
+  left: 78px;
+  animation: spinCCW 2.667s linear infinite;
+}
+
+@keyframes spinCW  { to { transform: rotate(360deg); } }
+@keyframes spinCCW { from { transform: rotate(7.5deg); } to { transform: rotate(-352.5deg); } }
+/* 7.5deg offset = half tooth pitch on small gear to start meshed */
+
 /* ── Cursor trail canvas ─────────────────────────── */
 #cursor-trail {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 8000;
+}
+
+/* ── Background particle+grid canvas ───────────── */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ── Scroll reveal ───────────────────────────────── */
@@ -118,20 +197,22 @@ body.preloading { overflow: hidden; }
   transform: translateY(0) !important;
 }
 
-/* ── Navbar — more transparent, frosted ─────────── */
+/* ── Navbar ─────────────────────────────────────── */
 #navbar {
   background: rgba(7,7,15,0.55) !important;
   backdrop-filter: blur(22px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
   border-bottom: 1px solid rgba(255,255,255,0.04) !important;
   transition: background 0.3s, border-color 0.3s !important;
+  position: relative;
+  z-index: 100;
 }
 #navbar.scrolled {
   background: rgba(7,7,15,0.78) !important;
   border-bottom-color: rgba(255,255,255,0.09) !important;
 }
 
-/* ── Spirit cards — rich hover ───────────────────── */
+/* ── Spirit cards ────────────────────────────────── */
 .spirit-card {
   transition: transform 0.32s cubic-bezier(0.22,1,0.36,1),
               background 0.28s, border-color 0.28s,
@@ -165,7 +246,7 @@ body.preloading { overflow: hidden; }
 }
 .spirit-card:hover h3 { color: #ff6b6b !important; }
 
-/* ── Message cards — gold hover ──────────────────── */
+/* ── Message cards ───────────────────────────────── */
 .message-card {
   transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
               background 0.28s, border-color 0.28s,
@@ -190,10 +271,8 @@ body.preloading { overflow: hidden; }
 }
 .message-card:hover::after { transform: scaleX(1); }
 .message-card:hover .message-name { color: var(--gold) !important; }
-
 .faculty-img, .message-avatar {
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1),
-              box-shadow 0.3s;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
 }
 .message-card:hover .faculty-img,
 .message-card:hover .message-avatar {
@@ -201,7 +280,7 @@ body.preloading { overflow: hidden; }
   box-shadow: 0 0 0 3px rgba(201,168,76,0.4);
 }
 
-/* ── Nav links — underline swipe ─────────────────── */
+/* ── Nav links ───────────────────────────────────── */
 .nav-links a:not(.nav-cta):not(.nav-special-link) {
   position: relative;
 }
@@ -220,7 +299,7 @@ body.preloading { overflow: hidden; }
   transform-origin: left;
 }
 
-/* ── CTA button — pulse ring on hover ────────────── */
+/* ── CTA button ──────────────────────────────────── */
 .btn-primary {
   position: relative;
   overflow: visible !important;
@@ -245,24 +324,82 @@ body.preloading { overflow: hidden; }
   50%      { transform: scale(1.12); opacity: 0.2; }
 }
 
-/* ── Hero title — subtle glow on scroll stop ─────── */
+/* ══════════════════════════════════════════════════
+   HERO TITLE — NO BLINK/GLITCH
+   Heart-signal shimmer band + hover enlarge & glow
+   ══════════════════════════════════════════════════ */
+
 .hero-title {
   position: relative;
-}
-.hero-title::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: blur(12px);
-  opacity: 0;
-  transition: opacity 0.4s;
-  pointer-events: none;
+  cursor: default;
+  /* split chars are handled in JS for shimmer */
+  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
+              filter 0.35s ease,
+              -webkit-text-stroke 0.35s ease;
+  display: inline-block;
+  /* NO glitch animation — clean base */
+  animation: fadeUp 0.8s 0.25s both !important;
 }
 
-/* ── Directory rows hover ────────────────────────── */
+/* Hover: enlarge + golden-orange stroke glow */
+.hero-title:hover {
+  transform: scale(1.04);
+  filter:
+    drop-shadow(0 0 18px rgba(255,165,0,0.7))
+    drop-shadow(0 0 40px rgba(255,80,0,0.4));
+  -webkit-text-stroke: 1.5px transparent;
+  background: linear-gradient(135deg, #fff5c0 0%, #ffd050 30%, #ff8800 60%, #ff4400 85%, #ffcc00 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeUp 0.8s 0.25s both, goldenSheen 1.5s linear infinite !important;
+}
+
+@keyframes goldenSheen {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* The heart-signal band shimmer — spans over characters */
+.hero-title-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+/* Shimmering band that sweeps left→right like a heartbeat highlight */
+.hero-title-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -30%;
+  width: 30%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 210, 80, 0.18) 30%,
+    rgba(255, 255, 200, 0.55) 50%,
+    rgba(255, 210, 80, 0.18) 70%,
+    transparent 100%
+  );
+  animation: heartBand 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+@keyframes heartBand {
+  0%   { left: -35%; opacity: 0; }
+  5%   { opacity: 1; }
+  /* ECG-like: fast sweep then flatline pause */
+  38%  { left: 110%; opacity: 1; }
+  40%  { left: 110%; opacity: 0; }
+  /* Tiny second blip — heartbeat double peak */
+  55%  { left: 30%; opacity: 0; width: 12%; }
+  58%  { left: 40%; opacity: 0.55; width: 8%; }
+  62%  { left: 52%; opacity: 0; width: 6%; }
+  100% { left: 110%; opacity: 0; width: 30%; }
+}
+
+/* ── Directory rows ──────────────────────────────── */
 .directory-row {
   transition: background 0.25s, border-color 0.25s, transform 0.25s !important;
   border-radius: 8px;
@@ -274,7 +411,7 @@ body.preloading { overflow: hidden; }
 }
 .directory-row:hover h3 { color: var(--gold) !important; }
 
-/* ── Section labels — animated underline ─────────── */
+/* ── Section labels ──────────────────────────────── */
 .section-label {
   position: relative;
   display: inline-block;
@@ -290,7 +427,7 @@ body.preloading { overflow: hidden; }
 }
 .sr-visible .section-label::after { width: 100%; }
 
-/* ── Footer brand hover ──────────────────────────── */
+/* ── Footer ──────────────────────────────────────── */
 .footer-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 2.2rem;
@@ -303,7 +440,6 @@ body.preloading { overflow: hidden; }
   text-shadow: 0 0 30px rgba(201,168,76,0.4);
 }
 
-/* ── Flipbook section header hover ───────────────── */
 .flipbook-section .section-title:hover {
   background: linear-gradient(135deg, #fff, var(--gold));
   -webkit-background-clip: text;
@@ -311,9 +447,8 @@ body.preloading { overflow: hidden; }
   cursor: default;
 }
 
-/* ── Smooth page entrance (hero) ─────────────────── */
+/* ── Hero entrance animations ────────────────────── */
 .hero-eyebrow   { animation: fadeUp 0.7s 0.1s both; }
-.hero-title     { animation: fadeUp 0.8s 0.25s both; }
 .hero-tagline   { animation: fadeUp 0.7s 0.42s both; }
 .hero-desc      { animation: fadeUp 0.7s 0.55s both; }
 .hero-actions   { animation: fadeUp 0.7s 0.68s both; }
@@ -328,7 +463,6 @@ body.preloading { overflow: hidden; }
   to   { opacity: 1; }
 }
 
-/* Disable hero animations during preload (applied by JS) */
 body.preloading .hero-eyebrow,
 body.preloading .hero-title,
 body.preloading .hero-tagline,
@@ -338,15 +472,15 @@ body.preloading .hero-cover-art {
   animation: none;
   opacity: 0;
 }
-/* Re-enable after preload done */
+
 body:not(.preloading) .hero-eyebrow   { animation: fadeUp 0.7s 0.05s both; }
-body:not(.preloading) .hero-title     { animation: fadeUp 0.8s 0.18s both; }
+body:not(.preloading) .hero-title     { animation: fadeUp 0.8s 0.18s both !important; }
 body:not(.preloading) .hero-tagline   { animation: fadeUp 0.7s 0.32s both; }
 body:not(.preloading) .hero-desc      { animation: fadeUp 0.7s 0.44s both; }
 body:not(.preloading) .hero-actions   { animation: fadeUp 0.7s 0.56s both; }
 body:not(.preloading) .hero-cover-art { animation: fadeIn 1s 0.65s both; }
 
-/* ── Magnetic hover on Read Now button ───────────── */
+/* ── Nav CTA ─────────────────────────────────────── */
 .nav-cta {
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
               background 0.2s, box-shadow 0.2s !important;
@@ -356,63 +490,5 @@ body:not(.preloading) .hero-cover-art { animation: fadeIn 1s 0.65s both; }
   box-shadow: 0 6px 20px rgba(232,64,64,0.4) !important;
 }
 
-/* ── Glitch flicker on hero title (subtle) ───────── */
-@keyframes glitch {
-  0%,96%,100% { clip-path: none; transform: none; }
-  97% {
-    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
-    transform: translateX(-3px);
-    color: #ff6b6b;
-  }
-  98% {
-    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
-    transform: translateX(3px);
-    color: #66d9ff;
-  }
-  99% {
-    clip-path: none;
-    transform: none;
-    color: inherit;
-  }
-}
-.hero-title {
-  animation: fadeUp 0.8s 0.25s both, glitch 8s 2s infinite !important;
-}
-body.preloading .hero-title {
-  animation: none !important;
-  opacity: 0;
-}
-body:not(.preloading) .hero-title {
-  animation: fadeUp 0.8s 0.18s both, glitch 8s 3s infinite !important;
-}
-
-/* ── Preloader Gears ────────────────────────────── */
-.gears-container {
-  position: relative;
-  width: 130px;
-  height: 90px;
-  margin-bottom: 10px;
-}
-.gear {
-  position: absolute;
-  transform-origin: center center;
-  filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
-}
-.gear-left {
-  top: 5px;
-  left: 10px;
-  animation: gearClockwise 4s linear infinite;
-}
-.gear-right {
-  top: 32px;
-  left: 68px;
-  animation: gearCounterClockwise 3s linear infinite;
-}
-@keyframes gearClockwise {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-@keyframes gearCounterClockwise {
-  0% { transform: rotate(15deg); }
-  100% { transform: rotate(-345deg); }
-}
+/* ensure sections appear above bg canvas */
+section, nav, footer { position: relative; z-index: 1; }

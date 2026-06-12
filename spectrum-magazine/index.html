@@ -15,11 +15,83 @@
   <div id="preloader">
   <div class="preloader-content">
     <div class="gears-container">
-      <svg class="gear gear-left" viewBox="0 0 100 100" width="80" height="80">
-        <path fill="#c9a84c" d="M50,30 C39,30 30,39 30,50 C30,61 39,70 50,70 C61,70 70,61 70,50 C70,39 61,30 50,30 Z M50,0 L55,15 L65,10 L65,25 L78,20 L73,34 L85,35 L77,47 L88,53 L77,59 L83,71 L70,72 L73,86 L59,82 L55,96 L45,96 L41,82 L27,86 L30,72 L17,71 L23,59 L12,53 L23,47 L15,35 L27,34 L22,20 L35,25 L35,10 L45,15 Z"/>
+      <!-- Big gear: 12 teeth, pitch radius 36, centre (46,46) in 92x92 viewbox -->
+      <svg class="gear-svg gear-big" viewBox="0 0 92 92" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="gBigGrad" cx="50%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#ffe08a"/>
+            <stop offset="60%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="#7a5c10"/>
+          </radialGradient>
+          <filter id="gBigGlow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- 12-tooth involute-style gear path centred at 46,46, pitch-r=36, tooth-h=9 -->
+        <path filter="url(#gBigGlow)" fill="url(#gBigGrad)" d="
+          M 46,10
+          L 50.2,10.4 L 52.5,5.5 L 56.5,6.8 L 56.4,12.1
+          L 60.4,14.1 L 64.0,10.5 L 67.3,13.1 L 65.3,18.0
+          L 68.2,21.5 L 73.1,19.8 L 75.0,23.4 L 71.1,27.0
+          L 72.5,31.3 L 77.7,31.5 L 78.4,35.6 L 73.5,37.6
+          L 73.5,42.1 L 78.5,44.5 L 77.5,48.5 L 72.3,48.2
+          L 70.6,52.4 L 75.1,55.4 L 73.0,59.1 L 68.0,57.2
+          L 65.1,60.5 L 68.2,65.0 L 65.2,68.1 L 60.8,65.5
+          L 57.2,67.9 L 58.6,73.0 L 55.0,74.9 L 52.0,70.6
+          L 47.5,71.3 L 47.0,76.5 L 43.0,76.5 L 42.5,71.3
+          L 38.0,70.6 L 35.0,74.9 L 31.4,73.0 L 32.8,67.9
+          L 29.2,65.5 L 24.8,68.1 L 21.8,65.0 L 24.9,60.5
+          L 22.0,57.2 L 17.0,59.1 L 14.9,55.4 L 19.4,52.4
+          L 17.7,48.2 L 12.5,48.5 L 11.5,44.5 L 16.5,42.1
+          L 16.5,37.6 L 11.6,35.6 L 12.3,31.5 L 17.5,31.3
+          L 18.9,27.0 L 15.0,23.4 L 16.9,19.8 L 21.8,21.5
+          L 24.7,18.0 L 22.7,13.1 L 26.0,10.5 L 29.6,14.1
+          L 33.6,12.1 L 33.5,6.8 L 37.5,5.5 L 39.8,10.4 Z
+        "/>
+        <!-- Inner hub ring -->
+        <circle cx="46" cy="46" r="18" fill="#1a1206" stroke="#c9a84c" stroke-width="2"/>
+        <circle cx="46" cy="46" r="7" fill="#0d0a02" stroke="#7a5c10" stroke-width="1.5"/>
+        <!-- Cross spokes -->
+        <line x1="28" y1="46" x2="64" y2="46" stroke="#7a5c10" stroke-width="2" stroke-linecap="round"/>
+        <line x1="46" y1="28" x2="46" y2="64" stroke="#7a5c10" stroke-width="2" stroke-linecap="round"/>
       </svg>
-      <svg class="gear gear-right" viewBox="0 0 100 100" width="60" height="60">
-        <path fill="#e84040" d="M50,30 C39,30 30,39 30,50 C30,61 39,70 50,70 C61,70 70,61 70,50 C70,39 61,30 50,30 Z M50,0 L55,15 L65,10 L65,25 L78,20 L73,34 L85,35 L77,47 L88,53 L77,59 L83,71 L70,72 L73,86 L59,82 L55,96 L45,96 L41,82 L27,86 L30,72 L17,71 L23,59 L12,53 L23,47 L15,35 L27,34 L22,20 L35,25 L35,10 L45,15 Z"/>
+
+      <!-- Small gear: 8 teeth, pitch radius 24, centre (31,31) in 62x62 viewbox -->
+      <!-- pitch-r ratio 36:24 = 1.5, so 12 big teeth → 8 small teeth — perfect mesh -->
+      <svg class="gear-svg gear-small" viewBox="0 0 62 62" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="gSmGrad" cx="50%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#ff9090"/>
+            <stop offset="55%" stop-color="#e84040"/>
+            <stop offset="100%" stop-color="#7a0a0a"/>
+          </radialGradient>
+          <filter id="gSmGlow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- 8-tooth gear centred at 31,31, pitch-r=24, tooth-h=7 -->
+        <path filter="url(#gSmGlow)" fill="url(#gSmGrad)" d="
+          M 31,7
+          L 35.5,7.5 L 36.5,3.2 L 40.8,4.8 L 39.2,9.0
+          L 43.0,11.8 L 47.0,8.8 L 50.2,12.0 L 47.5,15.8
+          L 49.5,20.0 L 54.0,19.5 L 55.2,24.0 L 50.8,25.5
+          L 50.5,30.0 L 55.0,32.2 L 53.5,36.5 L 49.0,35.5
+          L 46.5,39.5 L 50.2,43.0 L 47.8,46.8 L 43.5,44.5
+          L 39.8,47.2 L 41.5,51.8 L 37.5,53.2 L 35.0,49.0
+          L 30.5,49.5 L 30.0,54.0 L 25.8,53.5 L 25.5,49.0
+          L 21.5,47.5 L 18.5,51.5 L 14.5,49.5 L 16.5,44.8
+          L 13.2,41.5 L 8.8,43.5 L 6.8,39.5 L 10.5,36.5
+          L 9.5,32.0 L 5.0,30.5 L 5.5,26.0 L 10.0,25.5
+          L 10.5,21.0 L 6.5,18.5 L 8.5,14.2 L 13.0,16.0
+          L 16.5,12.5 L 14.0,8.2 L 18.2,5.8 L 21.0,9.8
+          L 25.2,8.0 L 24.5,3.5 L 29.0,3.0 Z
+        "/>
+        <circle cx="31" cy="31" r="12" fill="#1a0303" stroke="#e84040" stroke-width="1.5"/>
+        <circle cx="31" cy="31" r="4.5" fill="#0a0101" stroke="#7a0a0a" stroke-width="1.2"/>
+        <line x1="19" y1="31" x2="43" y2="31" stroke="#7a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="31" y1="19" x2="31" y2="43" stroke="#7a0a0a" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </div>
     <div id="preloader-title">IMPULSE</div>
@@ -27,6 +99,12 @@
     <div class="preloader-progress"><div id="preloader-bar"></div></div>
   </div>
 </div>
+
+  <!-- zap flash for preloader -->
+  <div class="zap-flash" id="zapFlash"></div>
+
+  <!-- background particle + grid canvas (full page) -->
+  <canvas id="bg-canvas"></canvas>
 
   <!-- cursor trail -->
   <canvas id="cursor-trail"></canvas>
@@ -67,7 +145,9 @@
 
     <div class="hero-content">
       <p class="hero-eyebrow">Department of Mechanical Engineering · KGEC · 2026</p>
-      <h1 class="hero-title">IMPULSE</h1>
+      <div class="hero-title-wrap">
+        <h1 class="hero-title">IMPULSE</h1>
+      </div>
       <p class="hero-tagline">NO TECH WITHOUT MECH</p>
       <p class="hero-desc">More than a magazine — a celebration of the vibrant spirit of the Department of Mechanical Engineering. Achievements, innovations, experiences, creativity, and aspirations, all in one edition.</p>
       <div class="hero-actions">
