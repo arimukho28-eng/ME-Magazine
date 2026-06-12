@@ -296,39 +296,34 @@ function initSectionEffects() {
       const cx = cv.width  * 0.80;
       const cy = cv.height * 0.50;
 
-      // Outer soft halo — radial gradient, feathered
-      const haloR = cv.height * 0.9 * env;
-      const grad  = ctx.createRadialGradient(cx, cy, 0, cx, cy, haloR);
-      grad.addColorStop(0,   `rgba(255, 210, 80, ${0.55 * env})`);
-      grad.addColorStop(0.3, `rgba(255, 160, 40, ${0.30 * env})`);
-      grad.addColorStop(0.7, `rgba(255, 100, 20, ${0.10 * env})`);
-      grad.addColorStop(1,   `rgba(255,  80, 10, 0)`);
-
       ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, haloR, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+ctx.globalCompositeOperation = 'screen';
 
-      // Tight bright core point
-      const coreR = cv.height * 0.18 * env;
-      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
-      coreGrad.addColorStop(0,   `rgba(255, 245, 180, ${0.9 * env})`);
-      coreGrad.addColorStop(0.5, `rgba(255, 200, 80,  ${0.5 * env})`);
-      coreGrad.addColorStop(1,   `rgba(255, 160, 40,  0)`);
+const waveWidth = 55;
+const waveHeight = 12;
 
-      ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      ctx.fillStyle = coreGrad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-    loop();
-  })();
+ctx.strokeStyle = `rgba(255,210,90,${0.9 * env})`;
+ctx.lineWidth = 2.2;
+ctx.shadowColor = 'rgba(255,180,50,0.9)';
+ctx.shadowBlur = 10;
+
+ctx.beginPath();
+
+const startX = cx - waveWidth / 2;
+
+ctx.moveTo(startX, cy);
+
+ctx.lineTo(startX + 12, cy);
+ctx.lineTo(startX + 18, cy - 4);
+ctx.lineTo(startX + 24, cy + 8);
+ctx.lineTo(startX + 30, cy - 12);
+ctx.lineTo(startX + 36, cy + 6);
+ctx.lineTo(startX + 44, cy);
+ctx.lineTo(startX + waveWidth, cy);
+
+ctx.stroke();
+
+ctx.restore();
 
   // ════════════════════════════════════════════════
   //  SPIRIT SECTION — Floating micro-gear particles
