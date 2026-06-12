@@ -127,8 +127,8 @@ body.preloading { overflow: hidden; }
 /* ── Proper Interlocking Gear Styles ───────────── */
 .gears-container {
   position: relative;
-  width: 160px;
-  height: 110px;
+  width: 145px;
+  height: 92px;
   margin-bottom: 16px;
   opacity: 0;
   animation: gearsAppear 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s both;
@@ -141,31 +141,39 @@ body.preloading { overflow: hidden; }
 .gear-svg {
   position: absolute;
   transform-origin: 50% 50%;
-  filter: drop-shadow(0 0 10px rgba(255,160,30,0.5));
   overflow: visible;
 }
 
-/* Gear 1: large, left — 12 teeth, radius 44 */
+/* Gear 1: large, left — 12 teeth, pitch-r=32, centre at (46,46) in 92×92 viewbox */
 .gear-big {
   width: 92px;
   height: 92px;
   top: 0;
   left: 0;
+  filter: drop-shadow(0 0 10px rgba(255,180,30,0.55));
   animation: spinCW 4s linear infinite;
 }
 
-/* Gear 2: small, right — 8 teeth, radius 30 — gear ratio 12:8 = 1.5x speed */
+/* Gear 2: small, right — 8 teeth, pitch-r=22, centre at (31,31) in 62×62 viewbox
+   Centre-to-centre = 32+22 = 54px.  Big centre at (46,46), small at (100,46).
+   So small top-left = (100-31, 46-31) = (69,15) */
 .gear-small {
   width: 62px;
   height: 62px;
-  top: 20px;
-  left: 78px;
-  animation: spinCCW 2.667s linear infinite;
+  top: 15px;
+  left: 69px;
+  filter: drop-shadow(0 0 8px rgba(232,64,64,0.55));
+  animation: spinCCW 2.6667s linear infinite;
 }
 
-@keyframes spinCW  { to { transform: rotate(360deg); } }
-@keyframes spinCCW { from { transform: rotate(7.5deg); } to { transform: rotate(-352.5deg); } }
-/* 7.5deg offset = half tooth pitch on small gear to start meshed */
+@keyframes spinCW  {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes spinCCW {
+  from { transform: rotate(22.5deg); }
+  to   { transform: rotate(22.5deg - 360deg); }
+}
 
 /* ── Cursor trail canvas ─────────────────────────── */
 #cursor-trail {
@@ -173,16 +181,6 @@ body.preloading { overflow: hidden; }
   inset: 0;
   pointer-events: none;
   z-index: 8000;
-}
-
-/* ── Background particle+grid canvas ───────────── */
-#bg-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
 }
 
 /* ── Scroll reveal ───────────────────────────────── */
@@ -360,43 +358,50 @@ body.preloading { overflow: hidden; }
   100% { background-position: 200% center; }
 }
 
-/* The heart-signal band shimmer — spans over characters */
+/* ══════════════════════════════════════════════════
+   HERO TITLE — heartbeat ECG blip from right edge
+   ══════════════════════════════════════════════════ */
+
+/* The hero-title-wrap clips the ECG blip to the title bounds */
 .hero-title-wrap {
   position: relative;
   display: inline-block;
+  overflow: hidden; /* keep blip inside word */
 }
 
-/* Shimmering band that sweeps left→right like a heartbeat highlight */
+/* Small ECG blip that sits at the right edge of IMPULSE.
+   It does NOT traverse the whole word — it pulses in place
+   at the right end, like a heartbeat monitor blip. */
 .hero-title-wrap::after {
   content: '';
   position: absolute;
-  top: 0; bottom: 0;
-  left: -30%;
-  width: 30%;
+  top: 8%;
+  bottom: 8%;
+  right: -4px;          /* anchored to right edge */
+  width: 28px;          /* narrow blip beam */
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 210, 80, 0.18) 30%,
-    rgba(255, 255, 200, 0.55) 50%,
-    rgba(255, 210, 80, 0.18) 70%,
+    rgba(255, 200, 60, 0.0) 20%,
+    rgba(255, 230, 100, 0.7) 50%,
+    rgba(255, 200, 60, 0.0) 80%,
     transparent 100%
   );
-  animation: heartBand 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  border-radius: 50%;
+  animation: ecgBlip 2.8s ease-in-out infinite;
   pointer-events: none;
   mix-blend-mode: screen;
+  filter: blur(2px);
 }
 
-@keyframes heartBand {
-  0%   { left: -35%; opacity: 0; }
-  5%   { opacity: 1; }
-  /* ECG-like: fast sweep then flatline pause */
-  38%  { left: 110%; opacity: 1; }
-  40%  { left: 110%; opacity: 0; }
-  /* Tiny second blip — heartbeat double peak */
-  55%  { left: 30%; opacity: 0; width: 12%; }
-  58%  { left: 40%; opacity: 0.55; width: 8%; }
-  62%  { left: 52%; opacity: 0; width: 6%; }
-  100% { left: 110%; opacity: 0; width: 30%; }
+/* ECG pulse: rapid double-peak (P wave + QRS complex feel), then long pause */
+@keyframes ecgBlip {
+  0%    { opacity: 0;    transform: scaleY(0.2) scaleX(0.5); }
+  6%    { opacity: 0.9;  transform: scaleY(1.4) scaleX(1); }    /* QRS spike up */
+  10%   { opacity: 0.3;  transform: scaleY(0.4) scaleX(0.8); }  /* dip */
+  14%   { opacity: 0.75; transform: scaleY(1.1) scaleX(0.9); }  /* T wave */
+  20%   { opacity: 0;    transform: scaleY(0.1) scaleX(0.5); }  /* flatline */
+  100%  { opacity: 0;    transform: scaleY(0.1) scaleX(0.5); }  /* long pause */
 }
 
 /* ── Directory rows ──────────────────────────────── */
@@ -490,5 +495,6 @@ body:not(.preloading) .hero-cover-art { animation: fadeIn 1s 0.65s both; }
   box-shadow: 0 6px 20px rgba(232,64,64,0.4) !important;
 }
 
-/* ensure sections appear above bg canvas */
-section, nav, footer { position: relative; z-index: 1; }
+/* Sections need position:relative for injected canvas children */
+section { position: relative; }
+nav, footer { position: relative; z-index: 1; }

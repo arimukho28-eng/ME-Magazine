@@ -11,47 +11,50 @@
   const progWrap = document.querySelector('.preloader-progress');
   const zapFlash = document.getElementById('zapFlash');
 
-  let progress = 0;
+  let progress    = 0;
+  let textRevealed = false;
 
-  // Reveal progress bar immediately
-  setTimeout(() => { if (progWrap) progWrap.classList.add('revealed'); }, 300);
+  // Reveal progress bar after short delay
+  setTimeout(() => { if (progWrap) progWrap.classList.add('revealed'); }, 200);
+
+  function revealText() {
+    if (textRevealed) return;
+    textRevealed = true;
+    if (zapFlash) {
+      zapFlash.classList.add('active');
+      setTimeout(() => {
+        zapFlash.classList.remove('active');
+        titleEl.classList.add('revealed');
+        subEl.classList.add('revealed');
+      }, 80);
+    } else {
+      titleEl.classList.add('revealed');
+      subEl.classList.add('revealed');
+    }
+  }
 
   const interval = setInterval(() => {
-    progress += Math.random() * 10 + 3;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(interval);
-      progBar.style.width = '100%';
-
-      // 200ms after fill → ZAP flash → text reveals
-      setTimeout(() => {
-        // Zap flash: rapid white-gold burst
-        if (zapFlash) {
-          zapFlash.classList.add('active');
-          setTimeout(() => {
-            zapFlash.classList.remove('active');
-            // Immediately show title+sub with smooth entrance
-            titleEl.classList.add('revealed');
-            subEl.classList.add('revealed');
-          }, 90);
-        } else {
-          titleEl.classList.add('revealed');
-          subEl.classList.add('revealed');
-        }
-
-        // Exit preloader after text sits for 900ms
-        setTimeout(() => {
-          overlay.style.opacity = '0';
-          setTimeout(() => {
-            overlay.style.display = 'none';
-            document.body.classList.remove('preloading');
-            initScrollReveal();
-            initCounters();
-          }, 700);
-        }, 900);
-      }, 200);
-    }
+    progress += Math.random() * 9 + 4;
+    if (progress > 100) progress = 100;
     progBar.style.width = progress + '%';
+
+    // Reveal text early at 55%
+    if (progress >= 55) revealText();
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      // Stay visible for 1.4s after full so text can be read
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          document.body.classList.remove('preloading');
+          initScrollReveal();
+          initCounters();
+          initSectionEffects();
+        }, 700);
+      }, 1400);
+    }
   }, 80);
 })();
 
@@ -78,10 +81,10 @@ function initScrollReveal() {
 // ── Counters ────────────────────────────────────────
 function initCounters() {
   document.querySelectorAll('[data-count]').forEach(el => {
-    const target  = parseInt(el.dataset.count);
-    let current   = 0;
-    const step    = Math.ceil(target / 40);
-    const timer   = setInterval(() => {
+    const target = parseInt(el.dataset.count);
+    let current  = 0;
+    const step   = Math.ceil(target / 40);
+    const timer  = setInterval(() => {
       current = Math.min(current + step, target);
       el.textContent = current;
       if (current >= target) clearInterval(timer);
@@ -102,14 +105,13 @@ function initCounters() {
     th = trailCanvas.height = window.innerHeight;
   });
   let dots = [];
-  document.addEventListener('mousemove', (e) => {
+  document.addEventListener('mousemove', e => {
     if (Math.random() < 0.35) {
       dots.push({
         x: e.clientX, y: e.clientY,
         vx: (Math.random() - 0.5) * 1.5,
         vy: (Math.random() - 0.5) * 1.5 - 0.5,
-        life: 18 + Math.random() * 14,
-        maxLife: 32,
+        life: 18 + Math.random() * 14, maxLife: 32,
         size: 1.5 + Math.random() * 2.5,
         hue: 20 + Math.random() * 30
       });
@@ -125,7 +127,7 @@ function initCounters() {
       tc.save();
       tc.globalAlpha = a * 0.7;
       tc.fillStyle   = `hsl(${d.hue}, 100%, 65%)`;
-      tc.shadowColor = `hsl(${d.hue}, 100%, 65%)`;
+      tc.shadowColor = tc.fillStyle;
       tc.shadowBlur  = 6;
       tc.beginPath();
       tc.arc(d.x, d.y, d.size * a, 0, Math.PI * 2);
@@ -135,218 +137,261 @@ function initCounters() {
   })();
 })();
 
-// ── Background: Particle + Grid + Mouse Ripple/Magnetic ──
-(function initBgCanvas() {
-  const canvas = document.getElementById('bg-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+// ══════════════════════════════════════════════════
+//  SECTION EFFECTS — called after preloader exits
+// ══════════════════════════════════════════════════
+function initSectionEffects() {
 
-  let W = canvas.width  = window.innerWidth;
-  let H = canvas.height = window.innerHeight;
-  let mx = W / 2, my = H / 2;
-
-  window.addEventListener('resize', () => {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    rebuildParticles();
-  });
-  window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-  // ── Grid config ──
-  const CELL = 55; // grid spacing px
-
-  // ── Particle config ──
-  const PARTICLE_COUNT = 90;
-
-  function rebuildParticles() {
-    particles = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(makeParticle());
-    }
-  }
-
-  function makeParticle() {
-    return {
-      x:    Math.random() * W,
-      y:    Math.random() * H,
-      vx:   (Math.random() - 0.5) * 0.25,
-      vy:   (Math.random() - 0.5) * 0.25,
-      r:    0.8 + Math.random() * 1.6,
-      // gold, orange, white variants
-      hue:  Math.random() < 0.55
-              ? 35 + Math.random() * 20   // gold-orange
-              : (Math.random() < 0.5 ? 200 + Math.random() * 30 : 0),  // blue-white or red
-      alpha: 0.25 + Math.random() * 0.35,
-      baseAlpha: 0,
-    };
-  }
-
-  let particles = [];
-  rebuildParticles();
-  particles.forEach(p => p.baseAlpha = p.alpha);
-
-  // Ripple rings from mouse clicks
-  let ripples = [];
-  window.addEventListener('click', e => {
-    ripples.push({ x: e.clientX, y: e.clientY, r: 0, maxR: 180, alpha: 0.5 });
+  // Track global mouse position (page coords)
+  let gMouseX = window.innerWidth / 2;
+  let gMouseY = window.innerHeight / 2;
+  window.addEventListener('mousemove', e => {
+    gMouseX = e.clientX;
+    gMouseY = e.clientY;
   });
 
-  // Slow scroll offset for parallax grid
-  let scrollY = 0;
-  window.addEventListener('scroll', () => { scrollY = window.scrollY; });
-
-  function drawGrid() {
-    const MAGNETIC_RADIUS = 160;
-    const MAGNETIC_STRENGTH = 0.38; // max warp in px (normalized)
-    const cols = Math.ceil(W / CELL) + 2;
-    const rows = Math.ceil(H / CELL) + 2;
-    const offX = (scrollY * 0.04) % CELL;
-    const offY = (scrollY * 0.04) % CELL;
-
-    ctx.save();
-    ctx.strokeStyle = 'rgba(201,168,76,0.07)';
-    ctx.lineWidth   = 0.6;
-
-    // Vertical lines
-    for (let c = -1; c < cols; c++) {
-      const baseX = c * CELL - offX;
-      ctx.beginPath();
-      for (let r = -1; r <= rows; r++) {
-        const baseY = r * CELL - offY;
-        // Magnetic warp toward mouse
-        const dx  = baseX - mx;
-        const dy  = baseY - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const pull = Math.max(0, 1 - dist / MAGNETIC_RADIUS);
-        const warpX = -dx * pull * MAGNETIC_STRENGTH * 0.3;
-        const warpY = -dy * pull * MAGNETIC_STRENGTH * 0.3;
-        const px = baseX + warpX;
-        const py = baseY + warpY;
-        if (r === -1) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.stroke();
+  // ── Helper: create canvas overlaid on a section ──
+  function createSectionCanvas(section) {
+    const cv = document.createElement('canvas');
+    cv.style.cssText = `
+      position:absolute; inset:0; width:100%; height:100%;
+      pointer-events:none; z-index:0;
+    `;
+    section.style.position = 'relative';
+    section.insertBefore(cv, section.firstChild);
+    function resize() {
+      cv.width  = section.offsetWidth;
+      cv.height = section.offsetHeight;
     }
-
-    // Horizontal lines
-    for (let r = -1; r < rows; r++) {
-      const baseY = r * CELL - offY;
-      ctx.beginPath();
-      for (let c = -1; c <= cols; c++) {
-        const baseX = c * CELL - offX;
-        const dx  = baseX - mx;
-        const dy  = baseY - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const pull = Math.max(0, 1 - dist / MAGNETIC_RADIUS);
-        const warpX = -dx * pull * MAGNETIC_STRENGTH * 0.3;
-        const warpY = -dy * pull * MAGNETIC_STRENGTH * 0.3;
-        ctx.lineTo(baseX + warpX, baseY + warpY);
-      }
-      ctx.stroke();
-    }
-    ctx.restore();
+    resize();
+    window.addEventListener('resize', resize);
+    return cv;
   }
 
-  function drawParticles() {
-    const MAG_R = 200;
-    particles.forEach(p => {
-      // Magnetic pull toward mouse
-      const dx   = mx - p.x;
-      const dy   = my - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < MAG_R) {
-        const force = (1 - dist / MAG_R) * 0.012;
-        p.vx += dx * force;
-        p.vy += dy * force;
-      }
-      // Dampen velocity
-      p.vx *= 0.98;
-      p.vy *= 0.98;
-      p.x  += p.vx;
-      p.y  += p.vy;
+  // ════════════════════════════════════════════════
+  //  HERO + MESSAGES — Blue dot cluster (like screenshot)
+  //  Dots orbit/collect around mouse center
+  // ════════════════════════════════════════════════
+  function initDotCloud(section) {
+    const cv  = createSectionCanvas(section);
+    const ctx = cv.getContext('2d');
 
-      // Wrap edges
-      if (p.x < -10)  p.x = W + 10;
-      if (p.x > W+10) p.x = -10;
-      if (p.y < -10)  p.y = H + 10;
-      if (p.y > H+10) p.y = -10;
+    const COUNT = 220;
+    const dots  = [];
 
-      // Glow near mouse
-      const glow = dist < 120 ? (1 - dist / 120) * 0.5 : 0;
-      const alpha = Math.min(1, p.baseAlpha + glow);
+    for (let i = 0; i < COUNT; i++) {
+      // Spawn in a soft elliptical cloud pattern
+      const angle  = Math.random() * Math.PI * 2;
+      const radius = 80 + Math.random() * 300;
+      dots.push({
+        // home position relative to mouse — will update dynamically
+        angle,
+        radius,
+        // current screen pos
+        x: cv.width  / 2 + Math.cos(angle) * radius,
+        y: cv.height / 2 + Math.sin(angle) * radius,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: 1.5 + Math.random() * 2.8,   // small oval-ish dots
+        // soft blue palette — matching screenshot
+        blue: 170 + Math.floor(Math.random() * 60),  // hue 210-240
+        alpha: 0.35 + Math.random() * 0.5,
+        baseAlpha: 0,
+        // Individual drift phase
+        phase: Math.random() * Math.PI * 2,
+        driftSpeed: 0.003 + Math.random() * 0.006,
+      });
+    }
+    dots.forEach(d => d.baseAlpha = d.alpha);
 
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle   = p.hue === 0 ? `rgba(255,80,80,1)` : `hsl(${p.hue}, 90%, 65%)`;
-      ctx.shadowColor = ctx.fillStyle;
-      ctx.shadowBlur  = 6 + glow * 14;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r + glow * 2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    });
-  }
+    let t = 0;
+    function loop() {
+      requestAnimationFrame(loop);
+      ctx.clearRect(0, 0, cv.width, cv.height);
 
-  function drawRipples() {
-    ripples = ripples.filter(rp => rp.alpha > 0.01);
-    ripples.forEach(rp => {
-      rp.r     += 3.5;
-      rp.alpha *= 0.93;
-      ctx.save();
-      ctx.strokeStyle = `rgba(201,168,76,${rp.alpha})`;
-      ctx.lineWidth   = 1.5;
-      ctx.shadowColor = 'rgba(201,168,76,0.6)';
-      ctx.shadowBlur  = 12;
-      ctx.beginPath();
-      ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
+      // Mouse pos relative to section
+      const rect = section.getBoundingClientRect();
+      const localMX = gMouseX - rect.left;
+      const localMY = gMouseY - rect.top;
 
-      // Second ring offset
-      if (rp.r > 30) {
+      t += 0.016;
+
+      dots.forEach(d => {
+        // Drift angle slowly
+        d.phase += d.driftSpeed;
+
+        // Target: offset from mouse in elliptical cloud
+        const tx = localMX + Math.cos(d.angle + d.phase * 0.4) * d.radius;
+        const ty = localMY + Math.sin(d.angle + d.phase * 0.4) * d.radius * 0.65; // flatten vertically
+
+        // Spring toward target
+        const dx = tx - d.x;
+        const dy = ty - d.y;
+        d.vx += dx * 0.018;
+        d.vy += dy * 0.018;
+        d.vx *= 0.88;
+        d.vy *= 0.88;
+        d.x  += d.vx;
+        d.y  += d.vy;
+
+        // Fade out dots near edges
+        const edgeFade = Math.min(
+          d.x / 40, (cv.width  - d.x) / 40,
+          d.y / 40, (cv.height - d.y) / 40,
+          1
+        );
+        const alpha = Math.max(0, d.baseAlpha * edgeFade);
+
         ctx.save();
-        ctx.strokeStyle = `rgba(255,100,30,${rp.alpha * 0.5})`;
-        ctx.lineWidth   = 0.8;
+        ctx.globalAlpha = alpha;
+        // Blue-purple dots with soft glow — matching screenshot aesthetic
+        const hue = 215 + (d.blue - 170) / 60 * 25; // 215–240
+        ctx.fillStyle = `hsl(${hue}, 80%, 72%)`;
+        ctx.shadowColor = `hsl(${hue}, 90%, 75%)`;
+        ctx.shadowBlur  = 4;
         ctx.beginPath();
-        ctx.arc(rp.x, rp.y, rp.r - 25, 0, Math.PI * 2);
+        // Slight oval to match screenshot dots
+        ctx.ellipse(d.x, d.y, d.size, d.size * 1.45, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+    loop();
+  }
+
+  const heroSection     = document.getElementById('home');
+  const messagesSection = document.getElementById('messages');
+  if (heroSection)     initDotCloud(heroSection);
+  if (messagesSection) initDotCloud(messagesSection);
+
+  // ════════════════════════════════════════════════
+  //  SPIRIT SECTION — Floating micro-gear particles
+  //  Tiny spinning gear icons drift upward slowly
+  // ════════════════════════════════════════════════
+  function initGearParticles(section) {
+    const cv  = createSectionCanvas(section);
+    const ctx = cv.getContext('2d');
+
+    const COUNT = 18;
+    const gears = [];
+
+    function makeGear() {
+      return {
+        x:     Math.random() * cv.width,
+        y:     cv.height + 20,
+        size:  6 + Math.random() * 14,
+        speed: 0.3 + Math.random() * 0.5,
+        rot:   Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.02,
+        alpha: 0.07 + Math.random() * 0.13,
+        teeth: Math.random() < 0.5 ? 6 : 8,
+        drift: (Math.random() - 0.5) * 0.3,
+      };
+    }
+    for (let i = 0; i < COUNT; i++) {
+      const g = makeGear();
+      g.y = Math.random() * cv.height; // scatter initially
+      gears.push(g);
+    }
+
+    function drawGearShape(ctx, teeth, r, toothH) {
+      ctx.beginPath();
+      const step = (Math.PI * 2) / teeth;
+      for (let i = 0; i < teeth; i++) {
+        const a = i * step;
+        const a1 = a - step * 0.22;
+        const a2 = a - step * 0.1;
+        const a3 = a + step * 0.1;
+        const a4 = a + step * 0.22;
+        ctx.lineTo(Math.cos(a1) * r,       Math.sin(a1) * r);
+        ctx.lineTo(Math.cos(a2) * (r+toothH), Math.sin(a2) * (r+toothH));
+        ctx.lineTo(Math.cos(a3) * (r+toothH), Math.sin(a3) * (r+toothH));
+        ctx.lineTo(Math.cos(a4) * r,       Math.sin(a4) * r);
+      }
+      ctx.closePath();
+    }
+
+    function loop() {
+      requestAnimationFrame(loop);
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      gears.forEach(g => {
+        g.y     -= g.speed;
+        g.x     += g.drift;
+        g.rot   += g.rotSpeed;
+        if (g.y < -30) { Object.assign(g, makeGear()); }
+
+        ctx.save();
+        ctx.translate(g.x, g.y);
+        ctx.rotate(g.rot);
+        ctx.globalAlpha = g.alpha;
+        ctx.strokeStyle = 'rgba(201,168,76,1)';
+        ctx.lineWidth   = 1;
+        drawGearShape(ctx, g.teeth, g.size, g.size * 0.28);
+        ctx.stroke();
+        // hub dot
+        ctx.beginPath();
+        ctx.arc(0, 0, g.size * 0.28, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
-      }
-    });
-  }
-
-  // Mouse-move ripple wave (subtle continuous)
-  let lastMx = mx, lastMy = my;
-  let waveRipples = [];
-  setInterval(() => {
-    const d = Math.hypot(mx - lastMx, my - lastMy);
-    if (d > 8) {
-      waveRipples.push({ x: mx, y: my, r: 0, maxR: 80, alpha: 0.2 });
-      lastMx = mx; lastMy = my;
+      });
     }
-  }, 60);
-
-  function drawWaveRipples() {
-    waveRipples = waveRipples.filter(rp => rp.alpha > 0.005);
-    waveRipples.forEach(rp => {
-      rp.r     += 2.2;
-      rp.alpha *= 0.90;
-      ctx.save();
-      ctx.strokeStyle = `rgba(255,170,30,${rp.alpha})`;
-      ctx.lineWidth   = 0.7;
-      ctx.beginPath();
-      ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
-    });
+    loop();
   }
 
-  (function bgLoop() {
-    requestAnimationFrame(bgLoop);
-    ctx.clearRect(0, 0, W, H);
-    drawGrid();
-    drawWaveRipples();
-    drawRipples();
-    drawParticles();
-  })();
-})();
+  // ════════════════════════════════════════════════
+  //  FLIPBOOK SECTION — Subtle floating page-turn dust
+  //  Soft rectangle motes drifting like paper dust
+  // ════════════════════════════════════════════════
+  function initPageDust(section) {
+    const cv  = createSectionCanvas(section);
+    const ctx = cv.getContext('2d');
+
+    const COUNT = 30;
+    const motes = [];
+
+    function makeMote() {
+      return {
+        x:     Math.random() * cv.width,
+        y:     Math.random() * cv.height,
+        w:     2 + Math.random() * 5,
+        h:     1 + Math.random() * 2.5,
+        rot:   Math.random() * Math.PI,
+        rotSpeed: (Math.random() - 0.5) * 0.008,
+        vx:   (Math.random() - 0.5) * 0.18,
+        vy:   -0.15 - Math.random() * 0.25,
+        alpha: 0.04 + Math.random() * 0.09,
+        life:  1,
+      };
+    }
+    for (let i = 0; i < COUNT; i++) motes.push(makeMote());
+
+    function loop() {
+      requestAnimationFrame(loop);
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      // Occasionally spawn new motes
+      if (Math.random() < 0.15) motes.push(makeMote());
+      for (let i = motes.length - 1; i >= 0; i--) {
+        const m = motes[i];
+        m.x   += m.vx;
+        m.y   += m.vy;
+        m.rot += m.rotSpeed;
+        if (m.y < -10 || m.x < -10 || m.x > cv.width + 10) {
+          motes.splice(i, 1); continue;
+        }
+        ctx.save();
+        ctx.translate(m.x, m.y);
+        ctx.rotate(m.rot);
+        ctx.globalAlpha = m.alpha;
+        ctx.fillStyle = 'rgba(255,230,150,1)';
+        ctx.fillRect(-m.w/2, -m.h/2, m.w, m.h);
+        ctx.restore();
+      }
+    }
+    loop();
+  }
+
+  const spiritSection   = document.getElementById('spirit');
+  const flipbookSection = document.getElementById('flipbook');
+  if (spiritSection)   initGearParticles(spiritSection);
+  if (flipbookSection) initPageDust(flipbookSection);
+}
