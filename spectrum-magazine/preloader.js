@@ -322,9 +322,13 @@ ctx.lineTo(startX + 44, cy);
 ctx.lineTo(startX + waveWidth, cy);
 
 ctx.stroke();
-
 ctx.restore();
 
+   } // end loop()
+
+    loop();
+  })();
+    
   // ════════════════════════════════════════════════
   //  SPIRIT SECTION — Floating micro-gear particles
   //  Tiny spinning gear icons drift upward slowly
