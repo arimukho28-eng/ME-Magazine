@@ -403,7 +403,27 @@ body {
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
-  .hero-cover-art { display: none; }
+
+  .hero-cover-art {
+    display: flex;
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    justify-content: center;
+    margin-top: 28px;
+    width: 100%;
+  }
+
+  .cover-card {
+    width: 170px;
+    animation: floatY 5s ease-in-out infinite;
+  }
+
+  .hero-content {
+    align-items: flex-start;
+  }
+}
   .hero-content { max-width: 100%; }
 }
 @media (max-width: 700px) {
